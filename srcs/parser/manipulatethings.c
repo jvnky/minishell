@@ -6,58 +6,75 @@
 /*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 00:14:34 by ychair            #+#    #+#             */
-/*   Updated: 2023/06/16 07:50:38 by ychair           ###   ########.fr       */
+/*   Updated: 2023/06/16 17:39:32 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include <errno.h>
-
-void executeCommand(Node* node) {
-    // tab args for execve,la command en [0] 
+void executeCommand(Node* node, int in_fd, int out_fd) {
     char** args = (char**)malloc((node->numArguments + 2) * sizeof(char*));
     args[0] = node->command;
-    int i;
 
-    i=0;
-    while(i < node->numArguments) {
+    for (int i = 0; i < node->numArguments; i++) {
         args[i + 1] = node->arguments[i];
-        i++;
     }
     args[node->numArguments + 1] = NULL;
 
-    // File redirection a verifier !!!!!!!
-    // if (node->inputFile != NULL) {
-    //     int fd = open(node->inputFile, O_RDONLY);
-    //     if (fd < 0) {
-    //         perror("Error opening input file");
-    //         //exit(1);
-    //     }
-    //     dup2(fd, STDIN_FILENO);
-    //     close(fd);
-    // }
-    // File redirection a verifier !!!!!!!
-    // if (node->outputFile != NULL) {
-    //     int fd = open(node->outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    //     if (fd < 0) {
-    //         perror("Error opening output file");
-    //         //exit(1);
-    //     }
-    //     dup2(fd, STDOUT_FILENO);
-    //     close(fd);
-    // }
+    pid_t pid = fork();
+    if (pid < 0) {
+        perror("Fork failed");
+        exit(1);
+    } else if (pid == 0) {
+        // Child process
 
-    // Execute the command
-    if (execvp(node->command, args) < 0) {
-        perror("Error executing command");
+        // Set up input and output redirection based on file descriptors
+        if (in_fd != STDIN_FILENO) {
+            dup2(in_fd, STDIN_FILENO);
+            close(in_fd);
+        }
+
+        if (out_fd != STDOUT_FILENO) {
+            dup2(out_fd, STDOUT_FILENO);
+            close(out_fd);
+        }
+
+        // Set the PATH environment variable
+        char* path = "/bin:/usr/bin"; // Adjust as per your system's paths
+        setenv("PATH", path, 1);
+
+        // Execute the command
+        execvp(node->command, args);
+
+        // If execvp returns, it means an error occurred
+        perror("Command execution failed");
+        exit(1);
+    } else {
+        // Parent process
+
+        // Wait for the child process to finish
+        int status;
+        waitpid(pid, &status, 0);
+
+        // Check if the child process exited normally
+        if (WIFEXITED(status)) {
+            int exit_status = WEXITSTATUS(status);
+            if (exit_status != 0) {
+                fprintf(stderr, "Child process exited with status %d\n", exit_status);
+            }
+        } else if (WIFSIGNALED(status)) {
+            int signal_number = WTERMSIG(status);
+            fprintf(stderr, "Child process terminated by signal %d\n", signal_number);
+        }
     }
 }
+
 
 void executeAST(Node* node, int in_fd, int out_fd) {
     if (node == NULL) {
         return;
     }
-    //si node right alors on a operateur .
+
     if (node->right != NULL) {
         int pipefd[2];
         if (pipe(pipefd) < 0) {
@@ -129,7 +146,7 @@ void executeAST(Node* node, int in_fd, int out_fd) {
             dup2(out_fd, STDOUT_FILENO);
         }
 
-       executeCommand(node);
+        executeCommand(node, in_fd, out_fd);
         //exit(0);
     }
 }

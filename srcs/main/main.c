@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/06/15 20:37:02 by ychair           ###   ########.fr       */
+/*   Updated: 2023/06/16 17:39:12 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void printAST(Node* root) {
     if (root->numArguments > 0) {
         printf("Arguments: ");
         for (int i = 0; i < root->numArguments; i++) {
-            printf("%s ", root->arguments[i]);
+           printf(" i == %d    %s ", i,root->arguments[i]);
         }
         printf("\n");
     }
