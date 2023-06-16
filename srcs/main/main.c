@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/03/24 02:43:23 by ychair           ###   ########.fr       */
+/*   Updated: 2023/06/15 20:37:02 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,32 +60,96 @@ int	lentab(char ***data)
 	return (i);
 }
 
-void traverseAST(ast_node* root) {
+// void traverseAST(Node* root) {
+//     if (root == NULL) {
+//         return;
+//     }
+//     printf("%s ", root->command);
+
+//     traverseAST(root->left);
+//     traverseAST(root->right);
+// }
+
+// void in_order_traversal(ast_node *root) {
+//     if (root != NULL) {
+//         in_order_traversal(root->left);
+//         printf("%u ", root->type);
+// 		if (root->cmd->args != NULL)
+// 			 printf("%s ", root->cmd->args[0]);
+//         in_order_traversal(root->right);
+//     }
+// }
+
+// void post_order_traversal(ast_node *root) {
+//     if (root != NULL) {
+//         post_order_traversal(root->left);
+//         post_order_traversal(root->right);
+//         printf("%s ", root->value);
+//     }
+// }
+// void printExecutionOrder(Node* root) {
+//     if (root == NULL)
+//         return;
+
+//     if (root->left != NULL && root->right != NULL) {
+//         printf("(");
+//         printExecutionOrder(root->left);
+//         printf(") %s (", root->command);
+//         printExecutionOrder(root->right);
+//         printf(")");
+//     } else {
+//         printf("%s", root->command);
+//     }
+// }
+
+
+// void printAST(Node* root, int level) {
+//     if (root == NULL)
+//         return;
+
+//     for (int i = 0; i < level; i++)
+//         printf("    ");
+
+//     printf("%s\n", root->command);
+//     printAST(root->left, level + 1);
+//     printAST(root->right, level + 1);
+// }
+
+void freeAST(Node* root) {
+    if (root == NULL)
+        return;
+
+    freeAST(root->left);
+    freeAST(root->right);
+    free(root);
+}
+
+void printAST(Node* root) {
     if (root == NULL) {
         return;
     }
-    printf("%s ", root->value);
 
-    traverseAST(root->left);
-    traverseAST(root->right);
-}
+    printf("Command: %s\n", root->command);
 
-void in_order_traversal(ast_node *root) {
-    if (root != NULL) {
-        in_order_traversal(root->left);
-        printf("%u ", root->type);
-		if (root->cmd->args != NULL)
-			 printf("%s ", root->cmd->args[0]);
-        in_order_traversal(root->right);
+    if (root->numArguments > 0) {
+        printf("Arguments: ");
+        for (int i = 0; i < root->numArguments; i++) {
+            printf("%s ", root->arguments[i]);
+        }
+        printf("\n");
     }
-}
-
-void post_order_traversal(ast_node *root) {
-    if (root != NULL) {
-        post_order_traversal(root->left);
-        post_order_traversal(root->right);
-        printf("%s ", root->value);
+     if (root->inputFile != NULL) {
+        printf("Input File: %s\n", root->inputFile);
     }
+
+    if (root->outputFile != NULL) {
+        printf("Output File: %s\n", root->outputFile);
+    }
+   // printf("Left Node:\n");
+    printAST(root->left);
+
+    //printf("Right Node:\n");
+    printAST(root->right);
 }
 
 int main(int ac, char **av, char **env)
@@ -93,7 +157,8 @@ int main(int ac, char **av, char **env)
     t_args  args;
     t_data  data;
     size_t  n;
-	ast_node* root;
+	Node* root;
+    
 
 
     /*utiliser isatty pour lire la commande balancer en param pour faire des shells en profondeur
@@ -113,37 +178,30 @@ int main(int ac, char **av, char **env)
         write(1, "$> ", 3);
         getline(&args.str, &n, stdin);
         ft_parse(&args, &data);
-		//printf("!!! %c\n",*data.parse[1][0]);
-        // int i = 0;
-        // int j;
-        // while(data.parse[i])
-        // {
-        //     j = 0;
-        //     while(data.parse[i][j])
-        //     {
-        //         printf("%s\n",data.parse[i][j]);
-        //         printf("i : %i j : %i\n", i, j);
-        //         j++;
-        //     }
-        //     i++;
-        // }
-		int lent = lentab(data.parse);
+//		printf("!!! %c\n",*data.parse[1][0]);
+        int i = 0;
+        int j;
+        while(data.parse[i])
+        {
+            j = 0;
+            while(data.parse[i][j])
+            {
+                // printf("%s\n",data.parse[i][j]);
+                // printf("i : %i j : %i\n", i, j);
+                j++;
+            }
+            i++;
+        }
 
-		root = buildAST(data.parse,lent,root);
+        // strcmp strdup TO MAKE
 
-		runrun(root,STDIN_FILENO,STDOUT_FILENO);
 
-		printf("Pre-order traversal:\n");
-    	traverseAST(root);
-        printf("\n");
-        printf("in-order traversal:\n");
-        in_order_traversal(root);
-    	printf("\n");
-        printf("post-order traversal:\n");
-        post_order_traversal(root);
-        printf("\n");
-
+        root = buildast(data.parse,i);
+        printAST(root);
+        executeAST(root,STDIN_FILENO,STDOUT_FILENO);
+        // executeAST(root);
         free_all(&args, &data);
+        freeAST(root);
     }
     //free_all(&args, &data);
     return (0);
