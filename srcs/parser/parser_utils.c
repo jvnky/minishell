@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:53:30 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/01/27 23:07:02 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/03/31 11:03:41 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 
 void    add_until_space(t_args *args)
 {
-	while (args->str[args->i_max] && (args->str[args->i_max] != ' ' || args->str[args->i_max] != '\t' 
-				|| args->str[args->i_max] != '\n' || args->str[args->i_max] != '\r' || args->str[args->i_max] != '\v' 
+	while (args->str[args->i_max] && (args->str[args->i_max] != ' ' 
+				|| args->str[args->i_max] != '\t' 
+				|| args->str[args->i_max] != '\n' 
+				|| args->str[args->i_max] != '\r' 
+				|| args->str[args->i_max] != '\v' 
 				|| args->str[args->i_max] != '\f'))
 		args->i_max++;
 	return ;
@@ -23,8 +26,10 @@ void    add_until_space(t_args *args)
 
 void    skip_white_space(t_args *args)
 {
-	while (args->str[args->i] && (args->str[args->i] == ' ' || args->str[args->i] == '\t' 
-				|| args->str[args->i] == '\n' || args->str[args->i] == '\r' || args->str[args->i] == '\v' 
+	while (args->str[args->i] && (args->str[args->i] == ' ' 
+				|| args->str[args->i] == '\t' 
+				|| args->str[args->i] == '\n' || args->str[args->i] == '\r' 
+				|| args->str[args->i] == '\v' 
 				|| args->str[args->i] == '\f'))
 		args->i++;
 	return ;

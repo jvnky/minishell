@@ -6,7 +6,7 @@ CC						= 	gcc
 
 CFLAGS					= 	-MMD  -Wall -Wextra -Werror -I includes $(LEAKS)\
 
-LEAKS                   =	-g3 -fsanitize=address
+LEAKS                   =   -g3 -fsanitize=address
 
 BONUS_FLAG				= 	0
 
@@ -45,7 +45,9 @@ SRCS_LIST					=	\
 
 MINISHELL                   =	/main/main.c  \
 								/main/utils.c   \
+								/main/free.c   \
 								/parser/parse_built_in.c    \
+								/parser/history.c    \
 								/parser/parse_double_quote.c    \
 								/parser/parse_node.c    \
 								/parser/parse_simple_quote.c    \
@@ -57,7 +59,7 @@ MINISHELL                   =	/main/main.c  \
 								/exec/echo.c    \
 								/exec/pwd.c \
 								/exec/utils.c   \
-								/parser/manipulatethings.c \
+								/parser/manipulatething.c\
 
 
 SRCS                        =	$(addprefix $(SRCS_DIR), $(SRCS_LIST))

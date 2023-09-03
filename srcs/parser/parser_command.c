@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:58:32 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/03/22 02:17:37 by ychair           ###   ########.fr       */
+/*   Updated: 2023/03/31 11:04:35 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ char **cpy_parse_j(t_data *data)
 	dst = malloc(sizeof(char *) * (i + 2));
 	if (!dst)
 		return (NULL);
-	dst[i] = '\0';
 	dst[i + 1] = '\0';
-	i = 0;
-	while(data->parse[data->parse_i] && data->parse[data->parse_i][i])
+	dst[i] = '\0';
+	i = -1;
+	while(data->parse[data->parse_i] && data->parse[data->parse_i][++i])
 	{
 		j = 0;
 		while (data->parse[data->parse_i][i][j])
@@ -38,7 +38,6 @@ char **cpy_parse_j(t_data *data)
 		dst[i][j] = '\0';
 		while (--j >= 0)
 			dst[i][j] = data->parse[data->parse_i][i][j];
-		i++;
 	}
 	return (dst);
 }

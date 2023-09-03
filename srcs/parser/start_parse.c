@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 13:43:23 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/02/17 22:18:55 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/03/31 11:01:29 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,14 @@ int add_rest(t_args *args, t_data *data)
 	return (1);
 }
 
-int start_expance(t_args *args, char c)
+int start_expance(t_args *args, char c, int k)
 {
 	char    *tmp;
 	char    *dst;
 	size_t  n;
-	int     k;
 	int     i;
 	
 	n = 64;
-	k = 0;
 	while (k == 0)
 	{
 		i = 0;
@@ -114,7 +112,7 @@ int parse_expance(t_args *args, t_data *data, char c)
 		}
 		else
 		{
-			if (start_expance(args, c) == 0)
+			if (start_expance(args, c, 0) == 0)
 				return (0);
 			if (quote(args, data, c) == 0)
 				return (0);
@@ -123,7 +121,7 @@ int parse_expance(t_args *args, t_data *data, char c)
 	return (1);
 }
 
-int ft_parse(t_args *args, t_data *data)
+int ft_parse(t_args *args, t_data *data, t_history *history)
 {
 	data->parse_i = 0;
 	while (args->str[args->i])
@@ -143,5 +141,7 @@ int ft_parse(t_args *args, t_data *data)
 		while (check_white_space(args, args->i) == 1)
 			args->i++;
 	}
+	if (!add_history(args, history))
+		return (0);
 	return (1);
 }

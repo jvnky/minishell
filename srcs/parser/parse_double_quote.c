@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:59:32 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/02/18 01:48:57 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/05/27 00:23:09 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,8 @@ int quote(t_args *args, t_data *data, char c)
 	str[k + 2] = '\0';
 	args->i++;
 	j = 0;
-	while (k > 0)
-	{
-		str[j] = args->str[args->i];
-		k--;
-		args->i++;
-		j++;
-	}
+	while (k-- > 0)
+		str[j++] = args->str[args->i++];
 	args->i++;
 	if (add_command(data, str) == 0)
 		return (0);

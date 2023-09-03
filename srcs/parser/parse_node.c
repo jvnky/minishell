@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:56:27 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/03/14 22:56:24 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/03/31 11:06:01 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ char ***copy_parse_for_node(t_data *data)
 	int i;
 	int j;
 	
-	i = 0;
+	i = -1;
 	dst = malloc(sizeof(char **) * (data->parse_i + 3));
 	if (!dst)
 		return (NULL);
 	dst[data->parse_i + 1] = '\0';
 	dst[data->parse_i + 2] = '\0';
-	while(data->parse[i])
+	while(data->parse[++i])
 	{
 		j = 0;
 		while (data->parse[i][j])
@@ -33,15 +33,13 @@ char ***copy_parse_for_node(t_data *data)
 		if (!dst[i])
 			return (NULL);
 		dst[i][j] = '\0';
-		j = 0;
-		while (data->parse[i][j])
+		j = -1;
+		while (data->parse[i][++j])
 		{
 			dst[i][j] = cpy_str(data, i, j);
 			if (dst[i][j] == NULL)
 				return (NULL);
-			j++;
 		}
-		i++;
 	}
 	return (dst);
 }

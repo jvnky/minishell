@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 22:17:37 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/02/24 22:52:32 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/03/21 22:35:04 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,11 @@ typedef struct  s_data
     int parse_j;
     int parse_k;
 }   t_data;
+
+typedef struct s_history
+{
+    char    **str;
+    int     i;
+}   t_history;
 
 #endif

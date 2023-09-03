@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_built_in.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:51:10 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/02/15 05:02:42 by ychair           ###   ########.fr       */
+/*   Updated: 2023/05/27 00:21:04 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int parse_echo(t_args *args)
 {
 	int	i;
-
 
 	i = args->i + 4;
 	while (args->str[i] && (args->str[i] == ' ' || args->str[i] == '\t'

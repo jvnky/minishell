@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 01:48:27 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/03/12 00:15:35 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/06/22 00:47:58 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 char    *ft_strcpy(char *dst, char *src);
 int actual_path(char *str, char **env);
-int env_value(char *str, char **env);
+int env_value(char **env, char *str);
 int ft_cd(char *str, char **env);
 int ft_echo(char *str, int option, int fd);
 int ft_env(char *str, char **env, int fd);
