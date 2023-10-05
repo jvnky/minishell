@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   treeAST.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 00:37:03 by ychair            #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2023/10/05 04:21:39 by ychair           ###   ########.fr       */
-=======
-/*   Updated: 2023/08/09 01:33:34 by ychair           ###   ########.fr       */
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +43,6 @@ void setArguments(Node* node, char** arguments) {
     }
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 int checkop(char* command)
 {
     if (strcmp(command, ">") != 0 && strcmp(command, "<") != 0 &&
@@ -69,7 +61,6 @@ int checkopC(char command)
 }
 
 
-<<<<<<< HEAD
 // Node* buildast(char*** commands, int lent) {
 //     Node* root = NULL;
 //     Node* current = NULL;
@@ -148,9 +139,6 @@ int checkopC(char command)
 // }
 
 Node* astheredocs(char*** commands, int lent,int i,int j);
-=======
-
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 
 Node* buildast(char*** commands, int lent) {
     Node* root = NULL;
@@ -171,7 +159,6 @@ Node* buildast(char*** commands, int lent) {
                     operatorNode->left = current;
                     prev = operatorNode;
                     root = operatorNode;
-<<<<<<< HEAD
                 } else {
                        operatorNode->left = current;
                        prev->right = operatorNode;
@@ -258,13 +245,6 @@ Node* astheredocs(char*** commands, int lent,int i,int j) {
                 } else {
                        operatorNode->left = current;
                        prev->right = operatorNode;
-=======
-                } else {
-                       operatorNode->left = current;
-
-                    prev->right = operatorNode;
-
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
                 }
                 prev = operatorNode;
             } else{
@@ -274,19 +254,14 @@ Node* astheredocs(char*** commands, int lent,int i,int j) {
                     if((i == 0) || (i > 0 && commands[i][j - 1] != NULL &&
                          checkopC(commands[i][j-1][0]) == 0))
                     {
-<<<<<<< HEAD
                             if((i == 0 && j == 0) || i > 0)
                                 current = newNode;
-=======
-                        current = newNode;
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
                     }
                 //    printf("j =%d    = %s  = %s  ",j,commands[i][j],commands[i][j+1]);
                     if(i == lent -1  && i > 0 && prev != NULL)
                     {
                         prev->right = current;
                     }
-<<<<<<< HEAD
                     //REFAIRE ALGO PLUS DE ""
                     if(commands[i][j+1] != NULL && (commands[i][j+1][0] == '-' || checkop(commands[i][j+1])))
                     {
@@ -296,13 +271,6 @@ Node* astheredocs(char*** commands, int lent,int i,int j) {
                                 setArguments(current, &(commands[i][j + 1]));
                                 j++;
                             }
-=======
-
-                    if(commands[i][j+1] != NULL && (commands[i][j+1][0] == '-' || checkop(commands[i][j+1])))
-                    {
-                        setArguments(current, &(commands[i][j + 1]));
-                        j++;
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
                     }
                     if(commands[i+1] != NULL && commands[i+1][0][0] == '>')
                     {
@@ -319,10 +287,7 @@ Node* astheredocs(char*** commands, int lent,int i,int j) {
                     if(commands[i+1] != NULL && commands[i+1][0][0] == '<' && commands[i+1][0][1] == '<')
                     {
                         current->app = 2;
-<<<<<<< HEAD
                         
-=======
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
                     }
                 }
             }

@@ -6,11 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:53:30 by cofoundo          #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2023/09/05 23:11:28 by cofoundo         ###   ########.fr       */
-=======
-/*   Updated: 2023/03/31 11:03:41 by cofoundo         ###   ########.fr       */
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,41 +14,24 @@
 
 void	add_until_space(t_args *args)
 {
-<<<<<<< HEAD
 	while (args->str[args->i_max] && (args->str[args->i_max] != ' '
 			|| args->str[args->i_max] != '\t'
 			|| args->str[args->i_max] != '\n'
 			|| args->str[args->i_max] != '\r'
 			|| args->str[args->i_max] != '\v'
 			|| args->str[args->i_max] != '\f'))
-=======
-	while (args->str[args->i_max] && (args->str[args->i_max] != ' ' 
-				|| args->str[args->i_max] != '\t' 
-				|| args->str[args->i_max] != '\n' 
-				|| args->str[args->i_max] != '\r' 
-				|| args->str[args->i_max] != '\v' 
-				|| args->str[args->i_max] != '\f'))
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 		args->i_max++;
 	return ;
 }
 
 void	skip_white_space(t_args *args)
 {
-<<<<<<< HEAD
 	while (args->str[args->i] && (args->str[args->i] == ' '
 			|| args->str[args->i] == '\t'
 			|| args->str[args->i] == '\n'
 			|| args->str[args->i] == '\r'
 			|| args->str[args->i] == '\v'
 			|| args->str[args->i] == '\f'))
-=======
-	while (args->str[args->i] && (args->str[args->i] == ' ' 
-				|| args->str[args->i] == '\t' 
-				|| args->str[args->i] == '\n' || args->str[args->i] == '\r' 
-				|| args->str[args->i] == '\v' 
-				|| args->str[args->i] == '\f'))
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 		args->i++;
 	return ;
 }

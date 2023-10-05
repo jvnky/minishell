@@ -6,11 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:56:27 by cofoundo          #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2023/09/02 20:52:16 by cofoundo         ###   ########.fr       */
-=======
-/*   Updated: 2023/03/31 11:06:01 by cofoundo         ###   ########.fr       */
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +14,14 @@
 
 char	***copy_parse_for_node(t_data *data, int i, int j)
 {
-<<<<<<< HEAD
 	char	***dst;
 
-=======
-	char ***dst;
-	int i;
-	int j;
-	
-	i = -1;
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 	dst = malloc(sizeof(char **) * (data->parse_i + 3));
 	if (!dst)
 		return (NULL);
 	dst[data->parse_i + 1] = '\0';
 	dst[data->parse_i + 2] = '\0';
-<<<<<<< HEAD
 	while (data->parse[++i])
-=======
-	while(data->parse[++i])
->>>>>>> 26f2e0fef931109ebf20856787daf6b93424e742
 	{
 		j = 0;
 		while (data->parse[i][j])
