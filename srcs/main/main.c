@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/05 04:27:51 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/05 05:23:17 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ int main(int ac, char **av, char **enve)
 
         // ft_env(env,1);
         root = buildast(data.parse,i);
-        printAST(root);
+        // printAST(root);
         if(root){
            env = executeAST(root,STDIN_FILENO,STDOUT_FILENO,env);  
         }

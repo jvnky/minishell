@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/05 04:39:48 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/05 05:33:40 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,29 +160,49 @@ char **execbuiltin(Node *node,int checkbuiltin,char **env)
   return (env);
 }
 
-void     ft_heredocs(Node *node)
+int     ft_heredocs(Node *node)
 {
+    int fd;
      if (node == NULL) {
-        return;
+        return 0;
     }
-    char *delimiter = node->inputFile;
-    char *line = NULL;
-    size_t line_size = 0;
+    fd = open("hdocs", O_WRONLY | O_CREAT, 0644);
+    if (fd == -1) {
+        perror("Failed to open file");
+        return 0;
+    }
+     char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
 
-    //  while (1) {
-           getline(&line, &line_size, stdin);
+    while (1) {
+        read = getline(&line, &len, (FILE *)node->stdn);
 
+        if (read == -1) {
+            perror("Failed to read input");
+            break;
+        }
 
-            // Check if the line matches the delimiter
-            if (strcmp(line, delimiter) == 0) {
-                puts("lol");//     break; // Exit the loop when the delimiter is encountered
-            }
+        if (strcmp(line, node->inputFile) == 0) {
+            break; // Stop reading at the delimiter
+        }
 
-            // Process the line as needed, you can save it to a file or use it in your shell logic
-            // For now, let's just print it
-            printf("Here document line: %s", line);
-        // }
-            free(line);
+        // Write the current line to the file
+        if (write(fd, line, strlen(line)) == -1) {
+            perror("Failed to write to file");
+            break;
+        }
+    }
+
+    free(line); // Free allocated memory
+
+    // Close the file
+    if (close(fd) == -1) {
+        perror("Failed to close file");
+    }
+
+    return (fd); // Change the return value as needed
+
 }
 
 
@@ -202,9 +222,15 @@ char **executeCommand(Node *node, int in_fd, int out_fd,char **env) {
 
     
     // Set the input/output file descriptors based on redirection
-    if (node->inputFile != NULL && node->app !=2) {
+    if (node->inputFile != NULL && node->app ==2)
+    {
+        //Tmp file.
+         file_fd = ft_heredocs(node);
+    }
+    if (node->inputFile != NULL) {
         // Redirect input from a file
-    	file_fd = open(node->inputFile, O_RDONLY);
+        if(node->app != 2)
+    	    file_fd = open(node->inputFile, O_RDONLY);
         dup2(file_fd, STDIN_FILENO);
         close(file_fd);
     } else if (in_fd != STDIN_FILENO) {
@@ -212,18 +238,14 @@ char **executeCommand(Node *node, int in_fd, int out_fd,char **env) {
         dup2(in_fd, STDIN_FILENO);
         close(in_fd);
     }
-    if (node->inputFile != NULL && node->app ==2)
-    {
-        //FORK FILETMP!>
-        ft_heredocs(node);
-    }
+    
     if (node->outputFile != NULL) {
         // Redirect output to a file
          
         if(node->app == 1)
             file_fd = open(node->outputFile, O_WRONLY | O_CREAT | O_APPEND, 0644);
         else
-            file_fd = open(node->outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            file_fd = open(node->outputFile, O_WRONLY | O_CREAT , 0644);
         dup2(file_fd, STDOUT_FILENO);
         close(file_fd);
     }
@@ -324,7 +346,7 @@ char ** executeAST(Node* node, int in_fd, int out_fd, char** env) {
 
     original_stdin = dup(STDIN_FILENO);
     original_stdout = dup(STDOUT_FILENO);
-
+    node->stdn = stdin;
     if (node == NULL) {
         return(NULL);
     }

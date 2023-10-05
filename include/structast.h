@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 00:36:57 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/04 00:42:28 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/05 05:33:41 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct Node {
     struct Node* left;
     struct Node* right;
     int  app; // 1 >> / 2 <<
+    FILE  *stdn;
 } Node;
 
 Node* buildast(char ***commands, int lent);
