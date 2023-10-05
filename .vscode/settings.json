@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "wait.h": "c",
+        "cstdlib": "c",
+        "string.h": "c",
+        "minishell.h": "c",
+        "pipex.h": "c"
+    }
+}
