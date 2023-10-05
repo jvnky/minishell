@@ -6,25 +6,22 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:56:27 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/03/14 22:56:24 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/09/02 20:52:16 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char ***copy_parse_for_node(t_data *data)
+char	***copy_parse_for_node(t_data *data, int i, int j)
 {
-	char ***dst;
-	int i;
-	int j;
-	
-	i = 0;
+	char	***dst;
+
 	dst = malloc(sizeof(char **) * (data->parse_i + 3));
 	if (!dst)
 		return (NULL);
 	dst[data->parse_i + 1] = '\0';
 	dst[data->parse_i + 2] = '\0';
-	while(data->parse[i])
+	while (data->parse[++i])
 	{
 		j = 0;
 		while (data->parse[i][j])
@@ -33,25 +30,23 @@ char ***copy_parse_for_node(t_data *data)
 		if (!dst[i])
 			return (NULL);
 		dst[i][j] = '\0';
-		j = 0;
-		while (data->parse[i][j])
+		j = -1;
+		while (data->parse[i][++j])
 		{
 			dst[i][j] = cpy_str(data, i, j);
 			if (dst[i][j] == NULL)
 				return (NULL);
-			j++;
 		}
-		i++;
 	}
 	return (dst);
 }
 
-int add_node(t_data *data, char *str, int i)
+int	add_node(t_data *data, char *str, int i)
 {
-	int x;
-	char ***dst;
-	
-	dst = copy_parse_for_node(data);
+	int		x;
+	char	***dst;
+
+	dst = copy_parse_for_node(data, -1, 0);
 	if (!dst)
 		return (0);
 	while (data->parse[i])
@@ -75,10 +70,10 @@ int add_node(t_data *data, char *str, int i)
 	return (1);
 }
 
-static int parse_redirec(t_args *args, t_data *data, char c)
+static int	parse_redirec(t_args *args, t_data *data, char c)
 {
-	char dst[3];
-		
+	char	dst[3];
+
 	if (args->str[args->i] == c)
 	{
 		if (args->str[args->i + 1] && args->str[args->i + 1] == c)
@@ -96,16 +91,21 @@ static int parse_redirec(t_args *args, t_data *data, char c)
 			dst[0] = c;
 			if (add_node(data, dst, 0) == 0)
 				return (0);
-			args->i++; 
+			args->i++;
 		}
 	}
 	return (1);
 }
 
-int parse_node(t_args *args, t_data *data)
+int	parse_node(t_args *args, t_data *data)
 {
 	if (args->str[args->i] == '|')
 	{
+		while (check_fill(args) == 0)
+		{
+			if (expance_pipe(args, 0) == 0)
+				return (0);
+		}
 		if (add_node(data, "|", 0) == 0)
 			return (0);
 		args->i++;

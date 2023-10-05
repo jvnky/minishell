@@ -4,9 +4,9 @@ NAME					= 	minishell
 
 CC						= 	gcc
 
-CFLAGS					= 	-MMD  -Wall -Wextra -Werror -I includes $(LEAKS)\
+CFLAGS					= 	-MMD  -Wall -Wextra -Werror -I includes #$(LEAKS)\
 
-LEAKS                   =	-g3 -fsanitize=address
+LEAKS                   =   -g3 -fsanitize=address
 
 BONUS_FLAG				= 	0
 
@@ -45,9 +45,13 @@ SRCS_LIST					=	\
 
 MINISHELL                   =	/main/main.c  \
 								/main/utils.c   \
+								/main/free.c   \
+								/parser/expance.c    \
 								/parser/parse_built_in.c    \
+								/parser/history.c    \
 								/parser/parse_double_quote.c    \
 								/parser/parse_node.c    \
+								/parser/parse_node_utils.c    \
 								/parser/parse_simple_quote.c    \
 								/parser/parser_command.c    \
 								/parser/parser_utils.c \
@@ -57,7 +61,11 @@ MINISHELL                   =	/main/main.c  \
 								/exec/echo.c    \
 								/exec/pwd.c \
 								/exec/utils.c   \
-								/parser/manipulatethings.c \
+								/exec/env.c \
+								/exec/exit.c \
+								/exec/export.c \
+								/exec/unset.c \
+								/parser/manipulatething.c\
 
 
 SRCS                        =	$(addprefix $(SRCS_DIR), $(SRCS_LIST))

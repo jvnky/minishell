@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 22:17:37 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/02/24 22:52:32 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/08/28 22:28:34 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,24 @@
 
 typedef struct s_args
 {
-    char        *str;
-    int         i;
-    int         i_max;
-}   t_args;
+	char	*str;
+	int		i;
+	int		i_max;
+}	t_args;
 
-typedef struct  s_data
+typedef struct s_data
 {
-    char    ***parse;
-    char    *cmd;
-    int parse_i;
-    int parse_j;
-    int parse_k;
-}   t_data;
+	char	***parse;
+	char	*cmd;
+	int		parse_i;
+	int		parse_j;
+	int		parse_k;
+}	t_data;
+
+typedef struct s_history
+{
+	char	**str;
+	int		i;
+}	t_history;
 
 #endif

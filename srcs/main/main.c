@@ -6,11 +6,23 @@
 /*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/06/16 17:39:12 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/05 04:27:51 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// char    **env;
+
+int init_history(t_history  *history)
+{
+    history->str = malloc(sizeof(char*) * 1);
+    if (!history->str)
+        return (0);
+    history->str[0] = '\0';
+    history->i = 0;
+    return (1);
+}
 
 int init_args(t_args *args)
 {
@@ -38,11 +50,13 @@ int init_data(t_data *data)
     return (1);
 }
 
-int init_struct(t_args *args, t_data *data)
+int init_struct(t_args *args, t_data *data, t_history *history)
 {
     if (init_args(args) == 0)
         return (0);
     if (init_data(data) == 0)
+        return (0);
+    if (init_history(history) == 0)
         return (0);
     return (1);
 }
@@ -60,60 +74,6 @@ int	lentab(char ***data)
 	return (i);
 }
 
-// void traverseAST(Node* root) {
-//     if (root == NULL) {
-//         return;
-//     }
-//     printf("%s ", root->command);
-
-//     traverseAST(root->left);
-//     traverseAST(root->right);
-// }
-
-// void in_order_traversal(ast_node *root) {
-//     if (root != NULL) {
-//         in_order_traversal(root->left);
-//         printf("%u ", root->type);
-// 		if (root->cmd->args != NULL)
-// 			 printf("%s ", root->cmd->args[0]);
-//         in_order_traversal(root->right);
-//     }
-// }
-
-// void post_order_traversal(ast_node *root) {
-//     if (root != NULL) {
-//         post_order_traversal(root->left);
-//         post_order_traversal(root->right);
-//         printf("%s ", root->value);
-//     }
-// }
-// void printExecutionOrder(Node* root) {
-//     if (root == NULL)
-//         return;
-
-//     if (root->left != NULL && root->right != NULL) {
-//         printf("(");
-//         printExecutionOrder(root->left);
-//         printf(") %s (", root->command);
-//         printExecutionOrder(root->right);
-//         printf(")");
-//     } else {
-//         printf("%s", root->command);
-//     }
-// }
-
-
-// void printAST(Node* root, int level) {
-//     if (root == NULL)
-//         return;
-
-//     for (int i = 0; i < level; i++)
-//         printf("    ");
-
-//     printf("%s\n", root->command);
-//     printAST(root->left, level + 1);
-//     printAST(root->right, level + 1);
-// }
 
 void freeAST(Node* root) {
     if (root == NULL)
@@ -139,45 +99,91 @@ void printAST(Node* root) {
         printf("\n");
     }
      if (root->inputFile != NULL) {
-        printf("Input File: %s\n", root->inputFile);
+        printf("Input File: %s  ", root->inputFile);
+         if(root->app == 1)
+            printf("  app1\n");
+        else if (root->app == 2)
+            printf("  app2\n");
+        else
+            printf("\n");
     }
 
     if (root->outputFile != NULL) {
-        printf("Output File: %s\n", root->outputFile);
+        printf("Output File: %s ", root->outputFile);
+        if(root->app == 1)
+            printf("  app1\n");
+        else if (root->app == 2)
+            printf("  app2\n");
+        else
+            printf("\n");
     }
    // printf("Left Node:\n");
-    printAST(root->left);
+     printAST(root->left);
 
     //printf("Right Node:\n");
     printAST(root->right);
 }
 
-int main(int ac, char **av, char **env)
+static char **cpy_env(char **env)
+{
+    int i;
+    int j;
+    char    **dst;
+    
+    i = -1;
+    while (env[++i])
+        ;
+    dst = malloc(sizeof(char*) * (i + 1));
+    if (!dst)
+        return (NULL);
+    dst[i] = '\0';
+    i = -1;
+    while (env[++i])
+    {
+        j = -1;
+        while (env[i][++j])
+            ;
+        dst[i] = malloc(sizeof(char) * (j + 1));
+        if (!dst[i])
+            return (NULL);
+        dst[i][j] = '\0';
+        while (--j >= 0)
+            dst[i][j] = env[i][j];
+    }
+    return (dst);
+}
+
+int main(int ac, char **av, char **enve)
 {
     t_args  args;
     t_data  data;
+    t_history   history;
     size_t  n;
 	Node* root;
+    char    **env;
+
     
-
-
     /*utiliser isatty pour lire la commande balancer en param pour faire des shells en profondeur
     comme le shell*/
-    /*alors tu vas recup env parce ca contient toute les variable d environnement et du coup ez en fait*/
+    /*modifier shlvl*/
     (void)ac;
     (void)av;
-    (void)env;
+    env = cpy_env(enve);
     while (1)
     {
+        
+        // printf("OUT = %d  IN = %d\n",stdout,stdin);
         n = 1;
-        if (init_struct(&args, &data) == 0)
+        if (init_struct(&args, &data, &history) == 0)
         {
             write(0, "Error during struct init.\n", 26);
             return (0);
         }
         write(1, "$> ", 3);
+        
         getline(&args.str, &n, stdin);
-        ft_parse(&args, &data);
+        // printf("stdin = %d taillestr = %d  lol = %d , args == %s\n",fileno(stdin),ft_strlen(args.str),lol,args.str);
+        ft_parse(&args, &data, &history);
 //		printf("!!! %c\n",*data.parse[1][0]);
         int i = 0;
         int j;
@@ -195,15 +201,18 @@ int main(int ac, char **av, char **env)
 
         // strcmp strdup TO MAKE
 
-
+        // ft_env(env,1);
         root = buildast(data.parse,i);
         printAST(root);
-        executeAST(root,STDIN_FILENO,STDOUT_FILENO);
-        // executeAST(root);
+        if(root){
+           env = executeAST(root,STDIN_FILENO,STDOUT_FILENO,env);  
+        }
+        else
+            puts("FUCK");
         free_all(&args, &data);
         freeAST(root);
     }
-    //free_all(&args, &data);
+    free_all(&args, &data);
     return (0);
 }
 
