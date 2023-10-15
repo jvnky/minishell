@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 22:17:37 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/08/28 22:28:34 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/14 00:50:38 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ typedef struct s_args
 	char	*str;
 	int		i;
 	int		i_max;
+	int		tout;
+	int		tin;
 }	t_args;
 
 typedef struct s_data

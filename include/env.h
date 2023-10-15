@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 01:48:27 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/09/07 00:21:45 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/14 00:41:57 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,25 @@
 # include "structure.h"
 # include "minishell.h"
 
+char	**cd_home(char **env, char *path);
+char	**cd_minus(char **env, char *path);
+char	**cd_root(char **env, char *path, char *new_path);
+char	**ft_cd(char *str, char **env);
+char	**ft_export(char **env, char *str);
+char	**launch_cd_option(char **env, char *path, int i);
+char	**reset_env(char *buff, int i, char **env);
+char	**ft_unset(char *args, char **env);
+
+char	*cd_option_utils(char **env, char *path, char *str);
 char	*ft_strcpy(char *dst, char *src);
+
 int		actual_path(char *str, char **env);
 int		env_value(char **env, char *str);
-int		ft_cd(char *str, char **env);
 int		ft_echo(char *str, int option, int fd);
 int		ft_env(char **env, int fd);
 int		ft_pwd(void);
-char	**ft_unset(char *args, char **env);
-int		new_path(char *path, int i, char **env);
 int		recup_patch(char *str, char *buff, char **env);
-int		reset_env(char *buff, int i, char **env);
-int     ft_export(char **env, char *str);
+int		ft_strcompr(char *s1, char *s2);
+
+void	free_env(char **env);
 #endif

@@ -3,32 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 03:17:51 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/02/24 00:50:01 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/15 22:30:01 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    ft_kill(int signal)
+void	run_signals(int sig)
 {
-    (void)signal;
-    //free_all();
-    exit(ernno);
+	if (sig == 1)
+	{
+
+		signal(SIGINT, restore_prompt); // ctrl C
+
+		signal(SIGQUIT, SIG_IGN); // slash
+	}
+
+}
+void	restore_prompt(int sig)
+{
+	// g_ret_number = 130;
+	// write(1,"\b\b\033[K\n",5);
+		write(1, "\n", 1);
+	// write(1, "$> ", 3);
+        rl_replace_line("", 0);
+		rl_on_new_line();
+        rl_redisplay();
+
+	(void)sig;
 }
 
-void    press_c(int signal)
-{
-    (void)signal;
-    write(1, "\n", 1);
-    
-    //trouver un moyen de juste retourner au debut du main
+void setup_term(void) {
+    struct termios t;
+    tcgetattr(0, &t);
+    t.c_lflag &= ~ECHOCTL;
+    tcsetattr(0, TCSANOW, &t);
 }
-
-void    start_signal()
-{
-    signal(SIGQUIT, SIG_IGN);
-    signal(SIGINT, press_c);
-} 

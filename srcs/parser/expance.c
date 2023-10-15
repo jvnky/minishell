@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expance.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 21:33:41 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/09/05 20:34:29 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/13 23:04:27 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,16 +81,11 @@ int	parse_expance(t_args *args, t_data *data, char c)
 	{
 		if (parse_quote(args, c) == 1)
 		{
-			if (quote(args, data, c, 0) == 0)
+			if (quote(args, data, c, 2) == 0)
 				return (0);
 		}
 		else
-		{
-			if (start_expance(args, c, 0) == 0)
-				return (0);
-			if (quote(args, data, c, 0) == 0)
-				return (0);
-		}
+			return (0);
 	}
 	return (1);
 }

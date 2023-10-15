@@ -3,80 +3,128 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 23:34:28 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/09/19 22:55:15 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/15 02:33:35 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int new_path(char *path, int i, char **env)
+static char	**new_path(char **env, char *path, char *str)
 {
-    char *buff;
-    if (i == 0)
-    {
-        buff = ft_strjoin("OLDPWD=", path);
-        if (reset_env(buff, env_value(env, "OLDPWD"), env) == -1)
-            return(-1);
-        free(buff);
-        getcwd(path, PATH_MAX);
-        buff = ft_strjoin("PWD=", path);
-        if (reset_env(buff, env_value(env, "PWD"), env) == -1)
-            return (-1);
-        free(buff);
-    }
-    return (0);
- }
+	char	*dst;
 
-int actual_path(char *str, char **env)
-{
-    int i;
-    int j;
-
-    if (!str || (str[0] == '~' || !str[1]))
-    {
-        j = env_value(env, "HOME");
-        i = chdir(env[j]);
-        if (i == -1)
-            return (-1);
-        return (i);
-    }
-    return (0);
+	dst = ft_strjoin("OLDPWD=", path);
+	if (!dst)
+		return (NULL);
+	env = reset_env(dst, env_value(env, "OLDPWD"), env);
+	if (!env || !str)
+		return (NULL);
+	if (chdir(str) == -1)
+		return (NULL);
+	free(path);
+	free(dst);
+	path = malloc(sizeof (char) * (PATH_MAX + 1));
+	if (!path)
+		return (NULL);
+	path = getcwd(path, PATH_MAX);
+	dst = ft_strjoin("PWD=", path);
+	env = reset_env(dst, env_value(env, "PWD"), env);
+	if (!env)
+		return (NULL);
+	free(path);
+	free(dst);
+	free(str);
+	return (env);
 }
 
-int recup_path(char *str, char *buff, char **env)
+static char	**cd_utils(char **env, char *path)
 {
-    int i;
+	char	*dst;
 
-    i = actual_path(str, env);
-    if (i == 0)
-    {
-        if (!(ft_strncmp(str, "~root", 5) == 1))
-            str[0] = '/';
-        if (str[0] == '~')
-        {
-            ft_strcpy(buff, "/homes/");
-            ft_strcpy(buff + 7, env[env_value(env, "USER")]);
-        }
-        else
-            ft_strcpy(buff, str);
-        i = chdir(buff);
-        if (i == -1)
-            return (0);
-    }
-    return (i);
+	dst = ft_strjoin("OLDPWD=", path);
+	if (!dst)
+		return (NULL);
+	env = reset_env(dst, env_value(env, "OLDPWD"), env);
+	if (!env)
+		return (NULL);
+	path = getcwd(path, PATH_MAX);
+	free(dst);
+	dst = ft_strjoin("PWD=", path);
+	env = reset_env(dst, env_value(env, "PWD"), env);
+	if (!env)
+		return (NULL);
+	free(dst);
+	return (env);
 }
 
-int ft_cd(char *str, char **env)
+static int	check_cd_option(char *str)
 {
-    int i;
-    char    path[PATH_MAX];
-    char    buff[PATH_MAX];
-    puts("bouuuu");
-    getcwd(path, PATH_MAX);
-    i = recup_path(str, buff, env);
-    new_path(path, i, env);
-    return (i);
+	if (ft_strcompr(str, "..") == 1)
+		return (1);
+	else if (ft_strcompr(str, "/") == 1)
+		return (2);
+	else if (ft_strcompr(str, "-") == 1)
+		return (3);
+	else if (ft_strcompr(str, "~") == 1 || !str)
+		return (4);
+	else if (ft_strcompr(str, "~root") == 1)
+		return (5);
+	return (0);
+}
+
+char	**launch_cd_option(char **env, char *path, int i)
+{
+	if (i == 1)
+	{
+		if (chdir("..") == -1)
+			return (NULL);
+		env = cd_utils(env, path);
+		if (!env)
+			return (NULL);
+	}
+	else if (i == 2)
+	{
+		if (chdir("/") == -1)
+			return (NULL);
+		env = cd_utils(env, path);
+		if (!env)
+			return (NULL);
+	}
+	else if (i == 3)
+	{
+		env = cd_minus(env, path);
+		if (!env)
+			return (NULL);
+	}
+	return (env);
+}
+
+char	**ft_cd(char *str, char **env)
+{
+	char	*path;
+	int		i;
+
+	path = malloc(sizeof (char) * (PATH_MAX + 1));
+	if (!path)
+		return (NULL);
+	path = getcwd(path, PATH_MAX);
+	i = check_cd_option(str);
+	if (i != 0)
+	{
+		if (i >= 1 && i < 4)
+			env = launch_cd_option(env, path, i);
+		else if (i == 4)
+			env = cd_home(env, path);
+		else
+			env = cd_root(env, path, "/root\0");
+		free(path);
+	}
+	else
+		env = new_path(env, path, str);
+	if (!env)
+		return (NULL);
+	return (env);
 }

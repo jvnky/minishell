@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:23:45 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/08/28 23:28:52 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/15 01:00:54 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,19 @@ int	expance_pipe(t_args *args, int k)
 	char	*tmp;
 	char	*dst;
 	size_t	n;
-	int		i;
 
-	n = 64;
-	while (k == 0)
+	(void)k;
+	n = 0;
+	write(1, "pipe> ", 6);
+	getline(&tmp, &n, stdin);
+	if (tmp)
 	{
-		i = 0;
-		write(1, "pipe> ", 6);
-		getline(&tmp, &n, stdin);
-		while (tmp[i])
-			i++;
-		if (tmp[i])
-			k++;
 		dst = ft_strjoin(args->str, tmp);
-		if (!dst == 0)
+		if (!dst)
 			return (0);
+		printf("%s\n", dst);
 		free(args->str);
+		free(tmp);
 		args->str = dst;
 	}
 	return (1);

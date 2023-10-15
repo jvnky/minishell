@@ -4,15 +4,15 @@ NAME					= 	minishell
 
 CC						= 	gcc
 
-CFLAGS					= 	-MMD  -Wall -Wextra -Werror -I includes #$(LEAKS)\
+CFLAGS					= 	-MMD -Wall -Wextra -Werror -I includes $(LEAKS) -L -lft -lreadline
 
-LEAKS                   =   -g3 -fsanitize=address
+LEAKS					=	-g3 -fsanitize=address
 
 BONUS_FLAG				= 	0
 
 TESTER_FLAG				= 	0
 
-LIB						= -lc -lncurses\
+LIB						=	-lc -lncurses\
 
 #MLX_PATH				= minilibx-linux/
 
@@ -44,28 +44,29 @@ SRCS_LIST					=	\
 							$(MINISHELL) \
 
 MINISHELL                   =	/main/main.c  \
+								/main/ft_itoa.c  \
+								/main/init.c  \
 								/main/utils.c   \
 								/main/free.c   \
 								/parser/expance.c    \
 								/parser/parse_built_in.c    \
-								/parser/history.c    \
 								/parser/parse_double_quote.c    \
 								/parser/parse_node.c    \
 								/parser/parse_node_utils.c    \
-								/parser/parse_simple_quote.c    \
 								/parser/parser_command.c    \
 								/parser/parser_utils.c \
 								/parser/start_parse.c   \
 								/parser/treeAST.c   \
 								/exec/cd.c  \
+								/exec/cd_option.c  \
 								/exec/echo.c    \
 								/exec/pwd.c \
 								/exec/utils.c   \
 								/exec/env.c \
-								/exec/exit.c \
 								/exec/export.c \
 								/exec/unset.c \
 								/parser/manipulatething.c\
+								/signal/signal.c\
 
 
 SRCS                        =	$(addprefix $(SRCS_DIR), $(SRCS_LIST))

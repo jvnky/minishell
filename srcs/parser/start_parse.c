@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 13:43:23 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/09/05 23:10:33 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/13 23:16:51 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	add_rest(t_args *args, t_data *data)
 	int		j;
 	char	*tmp;
 
+	if (!args->str[args->i])
+		return (1);
 	if (check_white_space(args, args->i) == 1)
 		return (1);
 	i = args->i;
@@ -41,7 +43,7 @@ int	add_rest(t_args *args, t_data *data)
 	return (1);
 }
 
-int	ft_parse(t_args *args, t_data *data, t_history *history)
+int	ft_parse(t_args *args, t_data *data)
 {
 	data->parse_i = 0;
 	while (args->str[args->i])
@@ -61,7 +63,5 @@ int	ft_parse(t_args *args, t_data *data, t_history *history)
 		while (check_white_space(args, args->i) == 1)
 			args->i++;
 	}
-	if (!add_history(args, history))
-		return (0);
 	return (1);
 }

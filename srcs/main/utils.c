@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 11:07:02 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/02/25 01:42:38 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/15 01:53:03 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,42 +21,46 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		i++;
 	if (i == n && n)
 		i -= 1;
-	return (n ? ((unsigned char)s1[i]) - ((unsigned char)s2[i]) : 0);
+	if (n)
+		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	else
+		return (0);
 }
 
-int ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
-    int i;
-    
-    i = -1;
-    while (str[++i])
-        ;
-    return (i);
+	int	i;
+
+	i = -1;
+	while (str[++i])
+		;
+	return (i);
 }
 
-void    free_args(t_args *args)
+void	free_args(t_args *args)
 {
-    free(args->str);
+	free(args->str);
 }
 
-void    free_data(t_data *data)
+void	free_data(t_data *data)
 {
-    int i;
-    int j;
-    
-    i = -1;
-    while (data->parse[++i])
-    {
-        j = -1;
-        while(data->parse[i][++j])
-            free(data->parse[i][j]);
-        free(data->parse[i]);
-    }
-    free(data->parse[i]);
+	int	i;
+	int	j;
+
+	i = -1;
+	while (data->parse[++i])
+	{
+		j = -1;
+		while (data->parse[i][++j])
+			free(data->parse[i][j]);
+		free(data->parse[i]);
+	}
+	free(data->cmd);
+	free(data->parse[i]);
 }
 
-void    free_all(t_args *args, t_data *data)
+void	free_all(t_args *args, t_data *data)
 {
-    free_args(args);
-    free_data(data);
+	free_args(args);
+	free_data(data);
 }
