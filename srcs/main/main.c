@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/17 15:13:58 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 16:35:55 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,17 +162,15 @@ int	main(int ac, char **av, char **enve)
 		// 	exit (0);
 		// }
 		run_signals(1);
-		if (args.str && ft_parse(&args, &data) == 1)
+		if (ft_parse(&args, &data) == 1)
 		{
 			root = buildast(data.parse, data.parse_i + 1);
 			if (root)
 				env = executeAST(root, env, &args, &data);
 			freeAST(root);
 		}
-		else{ // free all
-			free_all(&args, &data);
-			exit(1);
-		}
+
+
 		free_all(&args, &data);
 	}
 	free_all(&args, &data);

@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/17 15:50:12 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 16:55:52 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,91 @@
 #include "../../include/minishell.h"
 #include "../../include/env.h"
 
+static	int		ft_count(char const *s, char c)
+{
+	int	i;
+	int j;
+
+	j = 0;
+	i = 0;
+	if (s[0] != c)
+		j++;
+	while (s[i])
+	{
+		while (s[i] == c && s[i])
+		{
+			i++;
+			if (s[i] != c && s[i])
+			{
+				j++;
+				while (s[i] != c && s[i])
+					i++;
+			}
+		}
+		if (s[i])
+			i++;
+	}
+	if (s[i - 1] == c)
+		j++;
+	return (j);
+}
+
+static	char	*ft_alloc(char const *s, char c)
+{
+	char	*dst;
+	int		i;
+
+	i = 0;
+	while (s[i] && s[i] == c)
+		i++;
+	while (s[i] && s[i] != c)
+		i++;
+	if (!(dst = malloc(sizeof(char) * (i + 1))))
+		return (NULL);
+	dst[i] = '\0';
+	i -= 1;
+	while (i >= 0)
+	{
+		dst[i] = s[i];
+		i--;
+	}
+	return (dst);
+}
+
+static	char	**ft_end(char **dst, int j)
+{
+	if (!(dst[j] = malloc(sizeof(char))))
+		return (NULL);
+	dst[j] = NULL;
+	return (dst);
+}
+
+char			**ft_split(char const *s, char c)
+{
+	int		i;
+	int		j;
+	int		k;
+	char	**dst;
+
+	if (s)
+	{
+		i = 0;
+		j = -1;
+		if (!(dst = malloc(sizeof(char*) * (ft_count(s, c) + 1))))
+			return (NULL);
+		while (s[i])
+		{
+			dst[++j] = ft_alloc(&s[i], c);
+			k = -1;
+			while (s[i] && dst[j][++k] && s[i] == dst[j][k])
+				i++;
+		}
+		printf("ok\n");
+		return (ft_end(dst, ++j));
+	}
+	return (NULL);
+}
+//////////
 
 int	count_words(char *str, char c)
 {
@@ -50,14 +135,14 @@ char	*word_dup(char *str, int start, int finish)
 	int		i;
 
 	i = 0;
-	word = malloc((finish - start + 2) * sizeof(char));
-	while (start <= finish)
+	word = malloc((finish - start + 1) * sizeof(char));
+	while (start < finish)
 		word[i++] = str[start++];
 	word[i] = '\0';
 	return (word);
 }
 
-char		**ft_split(char *s, char c)
+char		**ft_splitpath(char *s, char c)
 {
 	int	i;
 	int	j;
@@ -69,20 +154,15 @@ char		**ft_split(char *s, char c)
 	i = 0;
 	j = 0;
 	index = -1;
-	// printf("STR LEN %d\n",ft_strlen(s));
 	while (i <= ft_strlen(s))
 	{
 		if (s[i] != c && index < 0)
 			index = i;
 		else if ((s[i] == c || i == ft_strlen(s)) && index >= 0)
 		{
-			// while (s[i] && s[i] == c)
-			// 	i++;
-
 			split[j++] = word_dup(s, index, i);
 			index = -1;
 		}
-		printf("INDEX %d  i = %d\n" ,index,i);
 		i++;
 	}
 	split[j] = 0;
@@ -141,8 +221,12 @@ char	*ft_strdup(char *src, int x)
 {
 	char	*new;
 	int		i;
+	// int		size;
 
-	printf("SRC = %s\n",src);
+	// size = 0;
+	// while (src[size])
+	// 	++size;
+	// printf("SRC = %s\n",src);
 	if (!(new = malloc(sizeof(char) * (x+1))))
 		return (NULL);
 	i = 0;
@@ -166,18 +250,18 @@ char *lolilo(char *srcs, char *envu)
 	sp = ft_split(srcs,' ');
 	while(sp[i])
 		{
-			printf("SP = %s\n",sp[i]);
+			// printf("SP = %s\n",sp[i]);
 			j = 0;
 			while(sp[i][j])
 			{
 				if(sp[i][j] == '$')
 				{
 					home = ft_strdup(sp[i],j);
-					printf("home = %s\n",home);
+					// printf("home = %s\n",home);
 					home = ft_strjoin(home,envu);
 					if (!sp[i + 1])
 						home = ft_strjoin(home,"\"");
-					printf("hom1e = %s\n",home);
+					// printf("hom1e = %s\n",home);
 					free(sp[i]);
 					sp[i] = home;
 				}
@@ -190,7 +274,7 @@ char *lolilo(char *srcs, char *envu)
 		i = 0;
 		while(sp[i])
 		{
-			printf("srcccc = %s\n",srcs);
+			// printf("srcccc = %s\n",srcs);
 			if(!srcs)
 				srcs = sp[i];
 			else
@@ -227,7 +311,7 @@ char *envdol(char *src,char **env)
 			dmp = malloc(sizeof(char)* len + 1);
 			dmp[len] = '\0';
 			dmp = ft_stricpy(dmp,src,i+1);
-			printf("DMP = %s\n",dmp);
+			// printf("DMP = %s\n",dmp);
 			if(env_value(env, dmp) == -1)
 			{
 				free(dmp);
@@ -235,9 +319,9 @@ char *envdol(char *src,char **env)
 			}
 			else
 				envu = cd_option_utils(env,envu,dmp);
-			printf("env = %s\n",envu);
+			// printf("env = %s\n",envu);
 			 src = lolilo(src,envu);
-			printf("FINSI %s\n",src);
+			// printf("FINSI %s\n",src);
 		}
 		// puts("fff");
 		i++;
@@ -263,7 +347,7 @@ char *chekg(char *src)
         dst[i-3] = src[i-2];
         i--;
     }
-    printf("DST = %s\n",dst);
+    // printf("DST = %s\n",dst);
     return (dst);
 }
 
@@ -288,7 +372,7 @@ char	*get_absolute_path(char **cmd,char **env)
         return(NULL);
 
 
-    path_split = ft_split(path, ':');
+    path_split = ft_splitpath(path, ':');
     i = 0;
     while(path_split[i])
     {
@@ -519,7 +603,7 @@ char	**executeCommand(Node *node, t_args *fd, t_data * data, char **env)
 		}
 		else if (pids == 0)
 		{
-			printf("!! fdin=%d fdout=%d command=%s\n",fd->tin,fd->tout,node->command);
+			// printf("!! fdin=%d fdout=%d command=%s\n",fd->tin,fd->tout,node->command);
 			if (access(args[0], F_OK) != 0)
 			{
 				bins = get_absolute_path(args,env);
@@ -565,7 +649,7 @@ char	**executeAST(Node* node, char** env, t_args *fd, t_data *data)
 	}
 	else
 	{
-		printf("fdin=%d fdout=%d command=%s\n",fd->tin,fd->tout,node->command);
+		// printf("fdin=%d fdout=%d command=%s\n",fd->tin,fd->tout,node->command);
 		env = executeCommand(node, fd,data, env);
 	}
 	dup2(original_stdin, STDIN_FILENO);
