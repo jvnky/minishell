@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 09:28:20 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/17 15:01:24 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 17:08:04 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,6 @@ void	freeAST(Node *root);
 void	free_data(t_data *data);
 void	free_args(t_args *args);
 void	setup_term(void) ;
+
+extern int g_ret_number;
 #endif

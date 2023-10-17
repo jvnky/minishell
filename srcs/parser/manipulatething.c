@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/17 16:55:52 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 17:31:28 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char			**ft_split(char const *s, char c)
 	}
 	return (NULL);
 }
-//////////
+////////// abso path downm ,
 
 int	count_words(char *str, char c)
 {
@@ -285,8 +285,6 @@ char *lolilo(char *srcs, char *envu)
 }
 
 
-
-
 char *envdol(char *src,char **env)
 {
 	int i;
@@ -310,8 +308,9 @@ char *envdol(char *src,char **env)
 			}
 			dmp = malloc(sizeof(char)* len + 1);
 			dmp[len] = '\0';
+			printf("SRCS %s\n",src);
 			dmp = ft_stricpy(dmp,src,i+1);
-			// printf("DMP = %s\n",dmp);
+			printf("DMP = %s\n",dmp);
 			if(env_value(env, dmp) == -1)
 			{
 				free(dmp);
@@ -319,7 +318,7 @@ char *envdol(char *src,char **env)
 			}
 			else
 				envu = cd_option_utils(env,envu,dmp);
-			// printf("env = %s\n",envu);
+			printf("envu = %s\n",envu);
 			 src = lolilo(src,envu);
 			// printf("FINSI %s\n",src);
 		}

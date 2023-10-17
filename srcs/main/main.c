@@ -6,13 +6,13 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/17 16:35:55 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 17:10:11 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		g_ret_number;
+int g_ret_number;
 
 /*int	lentab(char ***data)
 {
@@ -137,11 +137,13 @@ int	main(int ac, char **av, char **enve)
 	t_data	data;
 	Node	*root;
 	char	**env;
+
 	// size_t	n;
 
 	(void)ac;
 	(void)av;
 	env = NULL;
+	g_ret_number = 0;
 	run_signals(1);
 	setup_term();
 	while (1)

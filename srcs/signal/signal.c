@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 03:17:51 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/17 15:04:30 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 17:09:21 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	run_signals(int sig)
 }
 void	restore_prompt(int sig)
 {
-	// g_ret_number = 130;
+		g_ret_number = 130;
 	// write(1,"\b\b\033[K\n",5);
 		write(1, "\n", 1);
 	// write(1, "$> ", 3);
