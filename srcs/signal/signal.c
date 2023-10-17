@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 03:17:51 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/17 05:23:25 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 15:04:30 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void	restore_prompt(int sig)
 	// write(1,"\b\b\033[K\n",5);
 		write(1, "\n", 1);
 	// write(1, "$> ", 3);
-        // rl_replace_line("", 0);
-		// rl_on_new_line();
-        // rl_redisplay();
+        rl_replace_line("", 0);
+		rl_on_new_line();
+        rl_redisplay();
 
 	(void)sig;
 }

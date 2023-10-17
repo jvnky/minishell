@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/17 05:23:36 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 15:13:58 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int	main(int ac, char **av, char **enve)
 	t_data	data;
 	Node	*root;
 	char	**env;
-	size_t	n;
+	// size_t	n;
 
 	(void)ac;
 	(void)av;
@@ -149,25 +149,29 @@ int	main(int ac, char **av, char **enve)
 		env = init_env(enve, env);
 		if (!env)
 			return (-1);
-		n = 0;
+		// n = 0;
 		if (init_struct(&args, &data) == 0)
 			return (0);
-		write(1, "$> ", 3);
-		// args.str = readline("$>");
-		// add_history(args.str);
+		// write(1, "$> ", 3);
+		args.str = readline("$>");
+		add_history(args.str);
 
-		if(getline(&args.str, &n, stdin) == -1)
-		{
-			free_all(&args, &data);
-			exit (0);
-		}
-		// run_signals(1);
-		if (ft_parse(&args, &data) == 1 && args.str)
+		// if(getline(&args.str, &n, stdin) == -1)
+		// {
+		// 	free_all(&args, &data);
+		// 	exit (0);
+		// }
+		run_signals(1);
+		if (args.str && ft_parse(&args, &data) == 1)
 		{
 			root = buildast(data.parse, data.parse_i + 1);
 			if (root)
 				env = executeAST(root, env, &args, &data);
 			freeAST(root);
+		}
+		else{ // free all
+			free_all(&args, &data);
+			exit(1);
 		}
 		free_all(&args, &data);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manipulatething.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/17 06:00:22 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 15:50:12 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ char	*word_dup(char *str, int start, int finish)
 	int		i;
 
 	i = 0;
-	word = malloc((finish - start + 1) * sizeof(char));
-	while (start < finish)
+	word = malloc((finish - start + 2) * sizeof(char));
+	while (start <= finish)
 		word[i++] = str[start++];
 	word[i] = '\0';
 	return (word);
@@ -69,15 +69,20 @@ char		**ft_split(char *s, char c)
 	i = 0;
 	j = 0;
 	index = -1;
+	// printf("STR LEN %d\n",ft_strlen(s));
 	while (i <= ft_strlen(s))
 	{
 		if (s[i] != c && index < 0)
 			index = i;
 		else if ((s[i] == c || i == ft_strlen(s)) && index >= 0)
 		{
+			// while (s[i] && s[i] == c)
+			// 	i++;
+
 			split[j++] = word_dup(s, index, i);
 			index = -1;
 		}
+		printf("INDEX %d  i = %d\n" ,index,i);
 		i++;
 	}
 	split[j] = 0;
@@ -136,11 +141,7 @@ char	*ft_strdup(char *src, int x)
 {
 	char	*new;
 	int		i;
-	// int		size;
 
-	// size = 0;
-	// while (src[size])
-	// 	++size;
 	printf("SRC = %s\n",src);
 	if (!(new = malloc(sizeof(char) * (x+1))))
 		return (NULL);
@@ -474,7 +475,7 @@ char	**executeCommand(Node *node, t_args *fd, t_data * data, char **env)
 		args[i + 1] = node->arguments[i];
 	}
 	args[node->numArguments + 1] = NULL;
-	
+
 	if (node->inputFile && node->app ==2)
 		ft_heredocs(node);
 	if (node->inputFile)
