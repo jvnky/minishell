@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manipulatething.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/17 17:31:28 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 18:50:06 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ static	char	*ft_alloc(char const *s, char c)
 
 	i = 0;
 	while (s[i] && s[i] == c)
-		i++;
+		i++;rcs = ft_strjoin(srcs,sp[i]);
+			i++;
 	while (s[i] && s[i] != c)
 		i++;
 	if (!(dst = malloc(sizeof(char) * (i + 1))))
@@ -206,7 +207,7 @@ char *truecpy(char *src)
 char	*ft_stricpy(char *dst, char *src,int i)
 {
 	int j;
-	// i--;
+
 	j = 0;
 	while (dst[j])
 	{
@@ -239,7 +240,7 @@ char	*ft_strdup(char *src, int x)
 	return (new);
 }
 
-char *lolilo(char *srcs, char *envu)
+/*char *lolilo(char *srcs, char *envu)
 {
 	char **sp;
 	int i;
@@ -250,18 +251,15 @@ char *lolilo(char *srcs, char *envu)
 	sp = ft_split(srcs,' ');
 	while(sp[i])
 		{
-			// printf("SP = %s\n",sp[i]);
 			j = 0;
 			while(sp[i][j])
 			{
 				if(sp[i][j] == '$')
 				{
 					home = ft_strdup(sp[i],j);
-					// printf("home = %s\n",home);
 					home = ft_strjoin(home,envu);
 					if (!sp[i + 1])
 						home = ft_strjoin(home,"\"");
-					// printf("hom1e = %s\n",home);
 					free(sp[i]);
 					sp[i] = home;
 				}
@@ -274,7 +272,6 @@ char *lolilo(char *srcs, char *envu)
 		i = 0;
 		while(sp[i])
 		{
-			// printf("srcccc = %s\n",srcs);
 			if(!srcs)
 				srcs = sp[i];
 			else
@@ -282,25 +279,104 @@ char *lolilo(char *srcs, char *envu)
 			i++;
 		}
 	return srcs;
+}*/
+
+char	*change_dollar(char *src, int i, char *env)
+{
+	int		j;
+	char	*dst;
+
+	j = 0;
+	while (j < i)
+		j++;
+	dst = malloc(sizeof(char) * (j + 1));
+	dst[j] = '\0';
+	free(src);
+	src = ft_strjoin(dst, env);
+	if (!src)
+		return (NULL);
+	return (src);
 }
 
-
-char *envdol(char *src,char **env)
+char	*find_env(char *src, int i, char **env)
 {
-	int i;
-	char *dmp;
-	int len;
-	int j;
-	char *envu;
+	char	*dmp;
+	char	*envu;
+	char	*dst;
+	int		j;
+	int		len;
+
+	j = i;
+	len = 0;
+	envu = NULL;
+	while (src[++j])
+		len++;
+	dmp = malloc(sizeof(char)* len + 1);
+	if (!dmp)
+		return (NULL);
+	dmp[len] = '\0';
+	dmp = ft_stricpy(dmp,src,i + 1);
+	if(env_value(env, dmp) != -1)
+		envu = cd_option_utils(env,envu,dmp);
+	src = change_dollar(src, i, envu);
+	free(dmp);
+	free(envu);
+	return (src);
+}
+
+char	*new_src(char **dst, int i)
+{
+	char *dst;
+	int	j;
+
+	j = -1;
+	dst = NULL;
+	while (++j < i)
+	{
+		if(!dst)
+			dst = dst[j];
+		else
+			dst = ft_strjoin(dst,dst[j]);
+		free(dst[j]);
+	}
+	free(dst[j]);
+	return (dst);
+}
+
+char	*envdol(char *src,char **env)
+{
+	int		i;
+	int		j;
+	char	**dst;
 
 	i = 0;
-	len = 0;
+	dst = ft_split(srcs, ' ');
+	if (!dst)
+		return (NULL);
+	while (dst[i])
+	{
+		j = -1;
+		while (dst[i][++j] && dst[i][j] != '$')
+			;
+		if (dst[i][j] == '$')
+		{
+			dst[i] = find_env(dst[i], j, env);
+			i++;
+		}
+		else
+			i++;
+	}
+	src = new_src(dst, i);
+	if (!src)
+		return (NULL);
+	return (src);
+}
 
-	while(src[i])
+/*while(src[i])
 	{
 		if(src[i] == '$')
 		{
-			j = i+1;
+			j = i + 1;
 			while (src[j] && src[j] != ' ' && src[j] != '\"')
 			{
 				j++;
@@ -320,13 +396,12 @@ char *envdol(char *src,char **env)
 				envu = cd_option_utils(env,envu,dmp);
 			printf("envu = %s\n",envu);
 			 src = lolilo(src,envu);
-			// printf("FINSI %s\n",src);
 		}
-		// puts("fff");
 		i++;
 	}
-return (src);
-}
+	return (src);*/
+
+
 char *chekg(char *src)
 {
     int i;
@@ -400,8 +475,6 @@ char	*get_absolute_path(char **cmd,char **env)
     free_array(path_split);
     return NULL;
 }
-
-
 
 int checkbuilt(Node *node)
 {
