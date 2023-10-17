@@ -4,7 +4,7 @@ NAME					= 	minishell
 
 CC						= 	gcc
 
-CFLAGS					= 	-MMD -Wall -Wextra -Werror -I includes $(LEAKS) -L -lft -lreadline
+CFLAGS					= 	-MMD -Wall -Wextra -Werror -I includes #$(LEAKS) -L -lft -lreadline
 
 LEAKS					=	-g3 -fsanitize=address
 

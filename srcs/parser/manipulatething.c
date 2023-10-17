@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manipulatething.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/16 01:34:45 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/17 06:00:22 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -474,11 +474,7 @@ char	**executeCommand(Node *node, t_args *fd, t_data * data, char **env)
 		args[i + 1] = node->arguments[i];
 	}
 	args[node->numArguments + 1] = NULL;
-	// printf("args = %s\n",args[0]);
-	//  if (access(args[0], F_OK) != 0)
-	// 	bins = get_absolute_path(args,env);
-	// else
-	// 	bins = args[0];
+	
 	if (node->inputFile && node->app ==2)
 		ft_heredocs(node);
 	if (node->inputFile)
@@ -489,7 +485,7 @@ char	**executeCommand(Node *node, t_args *fd, t_data * data, char **env)
 		dup2(file_fd, STDIN_FILENO);
 		close(file_fd);
 	}
-	if (fd->tin != STDIN_FILENO)
+	 if (fd->tin != STDIN_FILENO)
 	{
 		dup2(fd->tin, STDIN_FILENO);
 		close(fd->tin);
@@ -503,7 +499,7 @@ char	**executeCommand(Node *node, t_args *fd, t_data * data, char **env)
 		dup2(file_fd, STDOUT_FILENO);
 		close(file_fd);
 	}
-	if (fd->tout != STDOUT_FILENO)
+	else if (fd->tout != STDOUT_FILENO)
 	{
 		dup2(fd->tout, STDOUT_FILENO);
 		close(fd->tout);
