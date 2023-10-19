@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structast.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr >             +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 00:36:57 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/15 05:23:00 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/18 21:36:24 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,27 @@
 
 # include "minishell.h"
 
-typedef struct Node
+typedef struct s_node
 {
-	struct Node	*right;
-	struct Node	*left;
-	char		**arguments;
-	char		*command;
-	char		*inputFile;
-	char		*outputFile;
-	int			app;
-	int			numArguments;
-	int			quote;
-}	Node;
+	struct s_node	*right;
+	struct s_node	*left;
+	char			**arguments;
+	char			*command;
+	char			*ipf;
+	char			*opf;
+	int				app;
+	int				numarguments;
+	int				quote;
+}	t_node;
 
-Node	*astheredocs(char ***commands, int lent, int i, int j);
-Node	*buildast(char ***commands, int lent);
+t_node	*astheredocs(char ***commands, int lent, int i, int j);
+t_node	*buildast(char ***commands, int lent);
 
-char	**executeAST(Node *node, char **env, t_args *args, t_data *data);
+char	**executeast(t_node *node, char **env, t_args *args, t_data *data);
 char	*truecpy(char *src);
 char	*chekg(char *src);
 
-void	ASTrunner(Node *node, int nb);
-void	printAST(Node *root);
+void	printAST(t_node *root);
 void	restore_prompt(int sig);
 void	run_signals(int sig);
 #endif

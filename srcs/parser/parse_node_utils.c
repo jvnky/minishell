@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_node_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:23:45 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/15 01:00:54 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/19 02:38:57 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	expance_pipe(t_args *args, int k)
 		dst = ft_strjoin(args->str, tmp);
 		if (!dst)
 			return (0);
-		printf("%s\n", dst);
 		free(args->str);
 		free(tmp);
 		args->str = dst;

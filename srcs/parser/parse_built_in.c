@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:51:10 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/09/05 23:12:44 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/15 23:06:35 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static int	check_echo(t_args *args, t_data *data)
 		args->i = parse_echo(args);
 		if (add_command(data, "echo -n", 0) == 0)
 			return (0);
-       
 	}
 	return (1);
 }

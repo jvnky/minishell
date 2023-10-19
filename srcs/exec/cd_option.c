@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_option.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 00:02:54 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/16 00:27:14 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/16 22:07:04 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	*cd_option_utils(char **env, char *path, char *str)
 
 	i = env_value(env, str);
 	j = -1;
+	if (!env[i])
+		return (NULL);
 	while (env[i][++j])
 		;
 	k = -1;

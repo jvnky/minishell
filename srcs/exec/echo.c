@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 22:58:27 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/14 01:33:08 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/17 23:30:13 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	ft_echo(char *str, int option, int fd)
 {
 	(void)option;
-	write(fd, str, ft_strlen(str));
+	if (str)
+		write(fd, str, ft_strlen(str));
 	return (0);
 }

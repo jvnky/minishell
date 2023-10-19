@@ -14,10 +14,7 @@
 
 int	init_args(t_args *args)
 {
-	args->str = malloc(sizeof(char) * 1);
-	if (!args->str)
-		return (0);
-	args->str[0] = '\0';
+	args->str = NULL;
 	args->i = 0;
 	args->tin = dup(STDIN_FILENO);
 	args->tout = dup(STDOUT_FILENO);
@@ -26,14 +23,11 @@ int	init_args(t_args *args)
 
 int	init_data(t_data *data)
 {
-	data->parse = malloc(sizeof(char **) * 2);
+	data->parse = malloc(sizeof(char **));
 	if (!data->parse)
 		return (0);
-	data->cmd = malloc(sizeof(char) * 1);
-	if (!data->cmd)
-		return (0);
 	data->parse[0] = '\0';
-	data->parse[1] = '\0';
+	data->parse[1] = NULL;
 	data->parse_i = 0;
 	data->parse_j = 0;
 	data->parse_k = 0;

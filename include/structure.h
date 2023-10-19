@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 22:17:37 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/14 00:50:38 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/18 21:36:21 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ typedef struct s_args
 typedef struct s_data
 {
 	char	***parse;
-	char	*cmd;
 	int		parse_i;
 	int		parse_j;
 	int		parse_k;

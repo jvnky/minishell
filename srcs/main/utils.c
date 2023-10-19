@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 11:07:02 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/15 01:53:03 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/19 04:44:48 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ int	ft_strlen(char *str)
 
 void	free_args(t_args *args)
 {
-	free(args->str);
+	if(args->str != NULL)
+		free(args->str);
+	args->str = NULL;
+
 }
 
 void	free_data(t_data *data)
@@ -54,9 +57,13 @@ void	free_data(t_data *data)
 		while (data->parse[i][++j])
 			free(data->parse[i][j]);
 		free(data->parse[i]);
+		data->parse[i] = NULL;
 	}
-	free(data->cmd);
-	free(data->parse[i]);
+	if (data->parse[data->parse_i])
+		free(data->parse[data->parse_i]);
+	//free(data->parse[i]);
+	free(data->parse);
+	data->parse = NULL;
 }
 
 void	free_all(t_args *args, t_data *data)

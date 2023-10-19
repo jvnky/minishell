@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:26:03 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/15 15:29:04 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/19 01:42:17 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,13 @@ void	free_exit(t_data *data, t_history *history)
 	return ;
 }
 
-void	freeAST(Node *root)
+void	freeast(t_node *root)
 {
 	if (root == NULL)
 		return ;
 	free(root->command);
-	freeAST(root->left);
-	freeAST(root->right);
+	freeast(root->left);
+	freeast(root->right);
 	free(root);
+	root = NULL;
 }

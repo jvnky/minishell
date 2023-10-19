@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 01:48:27 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/14 00:41:57 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/18 21:36:33 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "structure.h"
 # include "minishell.h"
+
 
 char	**cd_home(char **env, char *path);
 char	**cd_minus(char **env, char *path);

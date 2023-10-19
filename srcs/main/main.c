@@ -6,63 +6,13 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/17 17:10:11 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/19 02:58:57 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_ret_number;
-
-/*int	lentab(char ***data)
-{
-	int	i;
-
-	i = -1;
-	while (data[++i])
-		;
-	return (i);
-}*/
-
-/*void printAST(Node* root)
-{
-	if (root == NULL)
-	return;
-
-	printf("Command: %s\n", root->command);
-
-	if (root->numArguments > 0) {
-	printf("Arguments: ");
-	for (int i = 0; i < root->numArguments; i++) {
-		printf(" i == %d	%s ", i,root->arguments[i]);
-	}
-	printf("\n");
-	}
-	 if (root->inputFile != NULL) {
-	printf("Input File: %s  ", root->inputFile);
-	 if(root->app == 1)
-	printf("  app1\n");
-	else if (root->app == 2)
-	printf("  app2\n");
-	else
-	printf("\n");
-	}
-
-	if (root->outputFile != NULL) {
-	printf("Output File: %s ", root->outputFile);
-	if(root->app == 1)
-	printf("  app1\n");
-	else if (root->app == 2)
-	printf("  app2\n");
-	else
-	printf("\n");
-	}
-   // printf("Left Node:\n");
-	 printAST(root->left);
-
-	//printf("Right Node:\n");
-	printAST(root->right);
-}*/
+int	g_ret_number;
 
 static char	**change_shlvl(char **env)
 {
@@ -131,49 +81,88 @@ static char	**init_env(char **enve, char **env)
 	return (env);
 }
 
+void printAST(t_node *root)
+{
+	if (root == NULL)
+		return;
+
+	printf("Command: %s\n", root->command);
+
+	if (root->numarguments > 0) {
+	printf("Arguments: ");
+	for (int i = 0; i < root->numarguments; i++) {
+		printf(" i == %d	%s ", i,root->arguments[i]);
+	}
+	printf("\n");
+	}
+	 if (root->ipf != NULL) {
+	printf("Input File: %s  ", root->ipf);
+	 if(root->app == 1)
+	printf("  app1\n");
+	else if (root->app == 2)
+	printf("  app2\n");
+	else
+	printf("\n");
+	}
+
+	if (root->opf != NULL) {
+	printf("Output File: %s ", root->opf);
+	if(root->app == 1)
+	printf("  app1\n");
+	else if (root->app == 2)
+	printf("  app2\n");
+	else
+	printf("\n");
+	}
+   // printf("Left Node:\n");
+	 printAST(root->left);
+
+	//printf("Right Node:\n");
+	printAST(root->right);
+}
+
+void	launch_ast(char **env, t_args *args, t_data *data)
+{
+	t_node	*root;
+
+	root = buildast(data->parse, data->parse_i + 1);
+	printAST(root);
+	if (root)
+		env = executeast(root, env, args, data);
+	freeast(root);
+	free_all(args, data);
+	return ;
+}
+
 int	main(int ac, char **av, char **enve)
 {
 	t_args	args;
 	t_data	data;
-	Node	*root;
 	char	**env;
-
-	// size_t	n;
 
 	(void)ac;
 	(void)av;
 	env = NULL;
 	g_ret_number = 0;
-	run_signals(1);
 	setup_term();
+	run_signals(1);
 	while (1)
 	{
 		env = init_env(enve, env);
 		if (!env)
 			return (-1);
-		// n = 0;
 		if (init_struct(&args, &data) == 0)
 			return (0);
-		// write(1, "$> ", 3);
 		args.str = readline("$>");
 		add_history(args.str);
-
-		// if(getline(&args.str, &n, stdin) == -1)
-		// {
-		// 	free_all(&args, &data);
-		// 	exit (0);
-		// }
-		run_signals(1);
-		if (ft_parse(&args, &data) == 1)
+		if (args.str == NULL)
 		{
-			root = buildast(data.parse, data.parse_i + 1);
-			if (root)
-				env = executeAST(root, env, &args, &data);
-			freeAST(root);
+				free_array(env);
+				free_all(&args,&data);
+				exit(0);
 		}
-
-
-		free_all(&args, &data);
+		if (ft_parse(&args, &data) == 1 && args.str)
+			launch_ast(env, &args, &data);
 	}
 	free_all(&args, &data);
 	return (0);

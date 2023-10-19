@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:58:32 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/13 02:05:46 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/19 04:59:07 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	free_command(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (!array)
+		return ;
+	while (array[i])
+	{
+		free(array[i]);
+		array[i] = NULL;
+		i++;
+	}
+	// free(array[i]);
+}
 
 char	**cpy_parse_j(t_data *data, int i)
 {
@@ -63,7 +79,7 @@ int	add_command(t_data *data, char *str, int i)
 		dst[i][j] = str[j];
 		j++;
 	}
-	free(data->parse[data->parse_i]);
+	free_command(data->parse[data->parse_i]);
 	data->parse[data->parse_i] = dst;
 	return (1);
 }

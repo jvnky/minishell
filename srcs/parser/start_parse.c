@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 13:43:23 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/13 23:16:51 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/17 00:14:53 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,11 @@ int	add_rest(t_args *args, t_data *data)
 		return (0);
 	tmp[i - args->i] = '\0';
 	j = i;
-	i--;
-	while ((i - args->i) >= 0)
-	{
+	while ((--i - args->i) >= 0)
 		tmp[i - args->i] = args->str[i];
-		i--;
-	}
 	if (add_command(data, tmp, 0) == 0)
 		return (0);
+	free(tmp);
 	args->i = j;
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:47:09 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/15 01:46:48 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/19 03:49:42 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@ int	ft_pwd(void)
 		ft_echo(path, 0, 1);
 		write(1, "\n", 1);
 	}
+	free(path);
 	return (0);
 }

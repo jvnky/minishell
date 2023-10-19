@@ -4,9 +4,11 @@ NAME					= 	minishell
 
 CC						= 	gcc
 
-CFLAGS					= 	-MMD -Wall -Wextra -Werror -I includes $(LEAKS) -L -lft -lreadline
+CFLAGS					= 	 -Wall -Wextra -Werror  -I includes -g
 
-LEAKS					=	-g3 -fsanitize=address
+LFLAGS					= 	 -L -lft -lreadline
+
+LEAKS					=	#-g3 -fsanitize=address
 
 BONUS_FLAG				= 	0
 
@@ -35,6 +37,7 @@ HEADER							=	\
 									structure.h \
 									structast.h \
 									env.h   \
+									ast.h \
 
 # *** SRCS ******************************************************************* #
 
@@ -56,7 +59,7 @@ MINISHELL                   =	/main/main.c  \
 								/parser/parser_command.c    \
 								/parser/parser_utils.c \
 								/parser/start_parse.c   \
-								/parser/treeAST.c   \
+								/ast/treeAST.c   \
 								/exec/cd.c  \
 								/exec/cd_option.c  \
 								/exec/echo.c    \
@@ -65,8 +68,13 @@ MINISHELL                   =	/main/main.c  \
 								/exec/env.c \
 								/exec/export.c \
 								/exec/unset.c \
-								/parser/manipulatething.c\
-								/signal/signal.c\
+								/ast/manipulatething.c \
+								/ast/manipulate_utils.c \
+								/ast/dollar_utils.c \
+								/signal/signal.c \
+								/ast/mani_split.c \
+								/ast/absolut_path.c \
+								/ast/exec_ast.c \
 
 
 SRCS                        =	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
@@ -91,7 +99,7 @@ $(MLX) :
 		@make -sC $(MLX_PATH)
 
 $(NAME): $(OBJS) $(SRCS)
-	@ $(CC) $(CFLAGS) $(HDIR) $(OBJS) $(MLX) $(LIB) -o $@
+	@ $(CC) $(CFLAGS) $(LEAKS) $(HDIR) $(OBJS) $(MLX) $(LIB) -o $@ $(LFLAGS)
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@ mkdir -p $(dir $@)
