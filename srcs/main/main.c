@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/20 05:57:25 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/21 00:28:44 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ void	launch_ast(char **env, t_args *args, t_data *data)
 {
 	t_node	*root;
 
+	// args->oin = dup(STDIN_FILENO);
+	// args->oout = dup(STDOUT_FILENO);
 	if (args->str[0])
 	{
 		add_history(args->str);
@@ -133,7 +135,7 @@ int	main(int ac, char **av, char **enve)
 			launch_ast(env, &args, &data);
 		free_all(&args, &data);
 		close(args.tin);
-		close(args.tout);
+		// close(args.tout);
 		close(args.oin);
 		close(args.oout);
 	}

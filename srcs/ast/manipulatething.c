@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/20 08:37:52 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/21 00:59:15 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,11 +223,13 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 		if (node->app == 2)
 			node->ipf = ".temp_input_file";
 		file_fd = open(node->ipf, O_RDONLY);
+		close(STDIN_FILENO);
 		dup2(file_fd, STDIN_FILENO);
 		close(file_fd);
 	}
 	else if (fd->tin != STDIN_FILENO)
 	{
+		close(STDIN_FILENO);
 		dup2(fd->tin, STDIN_FILENO);
 		close(fd->tin);
 	}
@@ -237,11 +239,13 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 			file_fd = open(node->opf, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
 			file_fd = open(node->opf, O_WRONLY | O_CREAT, 0644);
+		close(STDOUT_FILENO);
 		dup2(file_fd, STDOUT_FILENO);
 		close(file_fd);
 	}
 	else if (fd->tout != STDOUT_FILENO)
 	{
+		close(STDOUT_FILENO);
 		dup2(fd->tout, STDOUT_FILENO);
 		close(fd->tout);
 	}
@@ -345,9 +349,17 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 {
 	int	pipe_fds[2];
+	// int tmp;
 
+	// tmp = 0;
+	// close(fd->oin);
+	// close(fd->oout);
+	printf("Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+	// dup2(STDIN_FILENO,fd->oin);
+	// dup2(STDOUT_FILENO,fd->oout);
 	fd->oin = dup(STDIN_FILENO);
 	fd->oout = dup(STDOUT_FILENO);
+		printf("1  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 	// printf("1%s 1\n",env[2]);
 	if(node->command[0] == '\"')
 		node->command = chekg(node->command);
@@ -362,19 +374,33 @@ char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 			perror("Pipe creation failed");
 			exit(1);
 		}
+		// close(fd->tout);
+		// dup2(fd->tout,tmp);
 		fd->tout = pipe_fds[1];
+		// dup2(pipe_fds[1],fd->tout);
+		printf("1.1Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+		// close(fd->oin);
+		// close(fd->oout);
 		executeast(node->left, env, fd, data);
+		printf("1.3Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		close(pipe_fds[1]);
+		close(fd->tin);
 		dup2(pipe_fds[0], fd->tin);
 		close(pipe_fds[0]);
+		printf("1.5Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		executeast(node->right, env, fd, data);
 	}
 	else
 	{
+		printf("2  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		env = executeCommand(node, fd, data, env);
 	}
+		printf("3 Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 	dup2(fd->oin, STDIN_FILENO);
 	dup2(fd->oout, STDOUT_FILENO);
+
+		printf("4 Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+	// close(tmp);
 	close(fd->oin);
 	close(fd->oout);
 	close(fd->tin);

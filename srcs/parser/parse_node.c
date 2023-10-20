@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_node.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:56:27 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/20 00:43:24 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/20 23:57:59 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	add_node(t_data *data, char *str, int i)
 	dst[i][0][x] = '\0';
 	while (--x >= 0)
 		dst[i][0][x] = str[x];
-	free(data->parse);
+	free_data(data);
 	data->parse = dst;
 	data->parse_i = i;
 	return (1);

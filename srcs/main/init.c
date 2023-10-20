@@ -18,8 +18,8 @@ int	init_args(t_args *args)
 	args->i = 0;
 	args->tin = dup(STDIN_FILENO);
 	args->tout = dup(STDOUT_FILENO);
-	// args->oout = dup(STDOUT_FILENO);
-	// args->oin = dup(STDIN_FILENO);
+	args->oout = 0;
+	args->oin = 0;
 	return (1);
 }
 
