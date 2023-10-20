@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/20 05:58:17 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 08:37:52 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ void     ft_heredocs(t_node *node,char **env)
 				break;
 			}
 			if (strncmp(line, node->ipf,ft_strlen(line)-1) == 0) {
-				puts("FINISH");
+				// puts("FINISH");
                 break; // Stop reading at the delimiter
             }
 			tmp = nospace(line,env);
@@ -189,7 +189,9 @@ void     ft_heredocs(t_node *node,char **env)
         }
     // free(line); // Free allocated memory
 	free(line);
+	line = NULL;
 	free(tmp);
+	tmp = NULL;
     close(fd);
 
 }
@@ -215,7 +217,7 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 	}
 	args[node->numarguments + 1] = NULL;
 	if (node->ipf && node->app == 2)
-		ft_heredocs(node,env);
+		ft_heredocs(node, env);
 	if (node->ipf)
 	{
 		if (node->app == 2)

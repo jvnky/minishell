@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expance.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 21:33:41 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/13 23:04:27 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/20 06:29:08 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[++j])
 		dst[++i - 1] = s2[j];
 	dst[i] = '\0';
+	// free(s1);
 	return (dst);
 }
 
