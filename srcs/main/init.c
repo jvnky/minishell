@@ -18,16 +18,18 @@ int	init_args(t_args *args)
 	args->i = 0;
 	args->tin = dup(STDIN_FILENO);
 	args->tout = dup(STDOUT_FILENO);
+	// args->oout = dup(STDOUT_FILENO);
+	// args->oin = dup(STDIN_FILENO);
 	return (1);
 }
 
 int	init_data(t_data *data)
 {
-	data->parse = malloc(sizeof(char **));
+	data->parse = malloc(sizeof(char **) * 2);
 	if (!data->parse)
 		return (0);
 	data->parse[0] = '\0';
-	data->parse[1] = NULL;
+	data->parse[1] = '\0';
 	data->parse_i = 0;
 	data->parse_j = 0;
 	data->parse_k = 0;

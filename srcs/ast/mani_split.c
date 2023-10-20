@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 21:42:07 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/19 04:32:09 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 05:21:27 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_count(char const *s, char c)
 	return (j);
 }
 
-static char	*ft_alloc(char const *s, char c)
+char	*ft_alloca(char const *s, char c)
 {
 	char	*dst;
 	int		i;
@@ -66,11 +66,11 @@ static char	*ft_alloc(char const *s, char c)
 
 char	**ft_end(char **dst, int j)
 {
-	dst[j] = '\0';
+	dst[j] = NULL;
 	return (dst);
 }
 
-char	**ft_split(char *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	int		i;
 	int		j;
@@ -86,7 +86,7 @@ char	**ft_split(char *s, char c)
 			return (NULL);
 		while (s[i])
 		{
-			dst[++j] = ft_alloc(&s[i], c);
+			dst[++j] = ft_alloca(&s[i], c);
 			k = -1;
 			while (s[i] && dst[j][++k] && s[i] == dst[j][k])
 				i++;
@@ -108,6 +108,7 @@ void	free_array(char **array)
 		i++;
 	}
 	free(array[i]);
+	array[i] = NULL;
 	free(array);
 	array = NULL;
 }

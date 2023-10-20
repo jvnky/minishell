@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/19 03:15:19 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 05:58:17 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@
 #include "../../include/env.h"
 
 
-char	*get_absolute_path(char **cmd, char **env)
+char	*get_absolute_path(char **cmd,char **env)
 {
 	char	*path;
 	char	**path_split;
 	int		i;
 	char	*road;
+
 
 	if (cmd[0][0] == '\'' || cmd[0][0] == '\"')
 		cmd[0] = chekg(cmd[0]);
@@ -92,9 +93,7 @@ char	**execbuiltin(t_node *node, int checkbuiltin, char **env, t_args *fd, t_dat
 			{
 				if(node->arguments[i][0] == '\"')
 				{
-					printf("ECHO = %s\n",node->arguments[i]);
 					node->arguments[i] = chekg(node->arguments[i]);
-					printf("ECHO1 = %s\n",node->arguments[i]);
 					if(node->arguments[i] !=NULL)
 					{
 						node->arguments[i] = envdol(node->arguments[i], env);
@@ -141,14 +140,13 @@ char	**execbuiltin(t_node *node, int checkbuiltin, char **env, t_args *fd, t_dat
 	{
 		free_all(fd,data);
 		free(node);
-		free_array(env);
 		exit(0);
 	}
 
 	return (env);
 }
 
-void     ft_heredocs(t_node *node, char **env)
+void     ft_heredocs(t_node *node,char **env)
 {
 
     int fd;
@@ -164,7 +162,7 @@ void     ft_heredocs(t_node *node, char **env)
         perror("Failed to open temporary file");
         return;
     }
-	(void)env;
+
     // Redirect standard input to the temporary file
 
     //   printf("Heredoc FD: %d , INPUTEFILE = %s\n", node->stdn, node->ipf);
@@ -193,6 +191,7 @@ void     ft_heredocs(t_node *node, char **env)
 	free(line);
 	free(tmp);
     close(fd);
+
 }
 
 
@@ -207,20 +206,16 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 	int		i;
 
 	i = 0;
-	bins = NULL;
 	args = (char **)malloc((node->numarguments + 2) * sizeof(char *));
-	if(!args)
-		args = NULL;
-	args[0] = truecpy(node->command);
+	args[0] = node->command;
 	while (i < node->numarguments)
 	{
-		args[i + 1] = truecpy(node->arguments[i]);
+		args[i + 1] = node->arguments[i];
 		i++;
 	}
 	args[node->numarguments + 1] = NULL;
-
 	if (node->ipf && node->app == 2)
-		ft_heredocs(node, env);
+		ft_heredocs(node,env);
 	if (node->ipf)
 	{
 		if (node->app == 2)
@@ -239,7 +234,7 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 		if (node->app == 1)
 			file_fd = open(node->opf, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
-			file_fd = open(node->opf, O_WRONLY | O_CREAT , 0644);
+			file_fd = open(node->opf, O_WRONLY | O_CREAT, 0644);
 		dup2(file_fd, STDOUT_FILENO);
 		close(file_fd);
 	}
@@ -260,9 +255,8 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 			perror("Fork failed");
 			exit(1);
 		}
-		else if (pids == 0 && args[0])
+		else if (pids == 0)
 		{
-
 			if (access(args[0], F_OK) != 0)
 			{
 				bins = get_absolute_path(args, env);
@@ -271,62 +265,95 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 				if (execve(bins, args, NULL) == -1)
 				{
 					free(bins);
-					free_array(env);
+					// free_array(env);
 					bins = NULL;
-					free_all(fd,data);
+					close(fd->tin);
+					close(fd->tout);
+					close(fd->oin);
+					close(fd->oout);
+					free_all(fd, data);
+					// free_array(args);
 					exit(3);
 				}
+					close(fd->tin);
+					close(fd->tout);
+					close(fd->oin);
+					close(fd->oout);
+
 			}
 			else
 			{
 				if (execve(args[0], args, NULL) == -1)
 				{
-					free_array(env);
-					free_all(fd,data);
+					close(fd->tin);
+					close(fd->tout);
+					close(fd->oin);
+					close(fd->oout);
+					// free_array(env);
+					free_all(fd, data);
+					// free_array(args);
 					exit(5);
 				}
+				// 	close(STDIN_FILENO);
+				// close(STDOUT_FILENO);
+					close(fd->tin);
+					close(fd->tout);
+					close(fd->oin);
+					close(fd->oout);
 			}
-			// if(bins)
-			free_array(env);
+			// close(STDIN_FILENO);
+			// close(STDOUT_FILENO);
+			close(fd->tin);
+			close(fd->tout);
+			close(fd->oin);
+			close(fd->oout);
+			// free_array(env);
 			free(bins);
-			free_all(fd,data);
+			free_all(fd, data);
+			// free_array(args);
 			exit(0);
 		}
 		else
 		{
 			waitpid(pids, &status, 0);
-			// printf("STATUS %d\n",g_ret_number);
 			if (WIFEXITED(status))
 			{
-				if (WEXITSTATUS(status) == 1)
+				if (WEXITSTATUS(status) != 0)
 				{
 					g_ret_number = (status / 2) - 1;
-					printf("127: command not found\n");
-					free_all(fd, data);
+					 printf("127: command not found \n"  );
+					// free_all(fd, data);
+
+					// free_array(args);
+
+					free(args);
+					// args= NULL;
 					return (env);
 				}
+
 			}
 		}
 	}
-	free_array(args);
+	// free_array(args);
+	free(args);
+	// args= NULL;
 	return (env);
 }
 
 char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 {
 	int	pipe_fds[2];
-	int	original_stdin;
-	int	original_stdout;
 
-	original_stdin = dup(STDIN_FILENO);
-	original_stdout = dup(STDOUT_FILENO);
-	printf("%s 5\n",node->command);
+	fd->oin = dup(STDIN_FILENO);
+	fd->oout = dup(STDOUT_FILENO);
+	// printf("1%s 1\n",env[2]);
+	if(node->command[0] == '\"')
+		node->command = chekg(node->command);
 	node->command = envdol(node->command, env);
-	printf("1%s 5\n",node->command);
-	// printf("COMMAND %s\n",node->command);
+	// printf("1%s 5\n",node->command);
 	if (!node)
 		return (NULL);
-	if (ft_strcmp(node->command, "|") == 0)
+	if (strcmp(node->command, "|") == 0)
 	{
 		if (pipe(pipe_fds) == -1)
 		{
@@ -344,9 +371,11 @@ char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 	{
 		env = executeCommand(node, fd, data, env);
 	}
-	dup2(original_stdin, STDIN_FILENO);
-	dup2(original_stdout, STDOUT_FILENO);
-	close(original_stdin);
-	close(original_stdout);
+	dup2(fd->oin, STDIN_FILENO);
+	dup2(fd->oout, STDOUT_FILENO);
+	close(fd->oin);
+	close(fd->oout);
+	close(fd->tin);
+	close(fd->tout); // A CHEFK
 	return (env);
 }

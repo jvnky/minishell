@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/19 02:58:57 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 05:57:25 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,56 +81,21 @@ static char	**init_env(char **enve, char **env)
 	return (env);
 }
 
-void printAST(t_node *root)
-{
-	if (root == NULL)
-		return;
-
-	printf("Command: %s\n", root->command);
-
-	if (root->numarguments > 0) {
-	printf("Arguments: ");
-	for (int i = 0; i < root->numarguments; i++) {
-		printf(" i == %d	%s ", i,root->arguments[i]);
-	}
-	printf("\n");
-	}
-	 if (root->ipf != NULL) {
-	printf("Input File: %s  ", root->ipf);
-	 if(root->app == 1)
-	printf("  app1\n");
-	else if (root->app == 2)
-	printf("  app2\n");
-	else
-	printf("\n");
-	}
-
-	if (root->opf != NULL) {
-	printf("Output File: %s ", root->opf);
-	if(root->app == 1)
-	printf("  app1\n");
-	else if (root->app == 2)
-	printf("  app2\n");
-	else
-	printf("\n");
-	}
-   // printf("Left Node:\n");
-	 printAST(root->left);
-
-	//printf("Right Node:\n");
-	printAST(root->right);
-}
-
 void	launch_ast(char **env, t_args *args, t_data *data)
 {
 	t_node	*root;
 
-	root = buildast(data->parse, data->parse_i + 1);
-	printAST(root);
-	if (root)
-		env = executeast(root, env, args, data);
-	freeast(root);
-	free_all(args, data);
+	if (args->str[0])
+	{
+		add_history(args->str);
+		root = buildast(data->parse, data->parse_i + 1);
+		if (root)
+			env = executeast(root, env, args, data);
+		close(args->tin);
+		close(args->tout);
+		// free_array(env);
+		freeast(root); //A PLACE AILLEUR
+	}
 	return ;
 }
 
@@ -146,23 +111,31 @@ int	main(int ac, char **av, char **enve)
 	g_ret_number = 0;
 	setup_term();
 	run_signals(1);
+	env = init_env(enve, env);
 	while (1)
 	{
-		env = init_env(enve, env);
 		if (!env)
 			return (-1);
 		if (init_struct(&args, &data) == 0)
 			return (0);
+		rl_outstream = stderr;
 		args.str = readline("$>");
-		add_history(args.str);
-		if (args.str == NULL)
+		if (!args.str)
 		{
-				free_array(env);
-				free_all(&args,&data);
-				exit(0);
+			close(args.tin);
+			close(args.tout);
+			close(args.oin);
+			close(args.oout);
+			free_array(env);
+			return (0);
 		}
 		if (ft_parse(&args, &data) == 1 && args.str)
 			launch_ast(env, &args, &data);
+		free_all(&args, &data);
+		close(args.tin);
+		close(args.tout);
+		close(args.oin);
+		close(args.oout);
 	}
 	free_all(&args, &data);
 	return (0);

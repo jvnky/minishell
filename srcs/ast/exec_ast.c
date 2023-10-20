@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 21:51:06 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/19 01:22:05 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 04:14:05 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ char	*chekg(char *src)
 	}
 	return (dst);
 }
-
 
 char	*nospace(char *src, char **env)
 {
@@ -64,7 +63,7 @@ char	*nospace(char *src, char **env)
 	return (src);
 }
 
-int	ft_strcmp(char *s1, char *s2)
+int	ft_strcmpa(char *s1, char *s2)
 {
 	int	i;
 

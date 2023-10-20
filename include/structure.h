@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 22:17:37 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/18 21:36:21 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 01:19:32 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ typedef struct s_args
 	int		i_max;
 	int		tout;
 	int		tin;
+	int		oin;
+	int		oout;
 }	t_args;
 
 typedef struct s_data

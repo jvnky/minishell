@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manipulate_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 20:33:00 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/18 01:10:59 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/20 04:52:58 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,9 @@ char	*ft_stricpy(char *dst, char *src, int i)
 	int	j;
 
 	j = 0;
-	while (dst[j])
+
+
+	while (src[i])
 	{
 			dst[j] = src[i];
 			i++;

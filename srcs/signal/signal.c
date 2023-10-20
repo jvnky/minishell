@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 03:17:51 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/18 03:14:07 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 00:07:50 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	run_signals(int sig)
 
 void	restore_prompt(int sig)
 {
-	// g_ret_number = 130;
+	g_ret_number = 130;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();

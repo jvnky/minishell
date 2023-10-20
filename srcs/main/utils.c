@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 11:07:02 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/19 04:44:48 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 00:39:36 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,7 @@ int	ft_strlen(char *str)
 
 void	free_args(t_args *args)
 {
-	if(args->str != NULL)
-		free(args->str);
-	args->str = NULL;
-
+	free(args->str);
 }
 
 void	free_data(t_data *data)
@@ -51,23 +48,28 @@ void	free_data(t_data *data)
 	int	j;
 
 	i = -1;
-	while (data->parse[++i])
+	if (data->parse)
 	{
-		j = -1;
-		while (data->parse[i][++j])
-			free(data->parse[i][j]);
-		free(data->parse[i]);
-		data->parse[i] = NULL;
+		while (data->parse[++i])
+		{
+			j = -1;
+			while (data->parse[i][++j])
+				free(data->parse[i][j]);
+			/*if (data->parse[i][j])
+				free(data->parse[i][j]);*/
+			free(data->parse[i]);
+		}
+		if (data->parse[i])
+			free(data->parse[i]);
+		free(data->parse);
+		data->parse = NULL;
 	}
-	if (data->parse[data->parse_i])
-		free(data->parse[data->parse_i]);
-	//free(data->parse[i]);
-	free(data->parse);
-	data->parse = NULL;
 }
 
 void	free_all(t_args *args, t_data *data)
 {
-	free_args(args);
-	free_data(data);
+	if (args)
+		free_args(args);
+	if (data)
+		free_data(data);
 }

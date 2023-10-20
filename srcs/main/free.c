@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 22:26:03 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/19 01:42:17 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/20 06:04:39 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,27 @@ void	free_exit(t_data *data, t_history *history)
 
 void	freeast(t_node *root)
 {
+	int i;
+
+	i =0;
 	if (root == NULL)
 		return ;
-	free(root->command);
+	if(root->arguments)
+	{
+		while(root->arguments[i])
+		{
+			free(root->arguments[i]);
+			root->arguments[i]= NULL;
+			i++;
+		}
+		free(root->arguments);
+		root->arguments = NULL;
+	}
+	if(root->command)
+	{
+		free(root->command);
+		root->command = NULL;
+	}
 	freeast(root->left);
 	freeast(root->right);
 	free(root);
