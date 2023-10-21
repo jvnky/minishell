@@ -8,7 +8,7 @@ CFLAGS					= 	 -Wall -Wextra -Werror  -I includes -g
 
 LFLAGS					= 	 -L -lft -lreadline
 
-LEAKS					=	-g3 -fsanitize=address
+LEAKS					=	#-g3 -fsanitize=address
 
 BONUS_FLAG				= 	0
 

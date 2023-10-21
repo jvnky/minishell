@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/21 00:28:44 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/21 04:02:53 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,9 @@ void	launch_ast(char **env, t_args *args, t_data *data)
 		root = buildast(data->parse, data->parse_i + 1);
 		if (root)
 			env = executeast(root, env, args, data);
-		close(args->tin);
-		close(args->tout);
-		// free_array(env);
+
 		freeast(root); //A PLACE AILLEUR
+
 	}
 	return ;
 }
@@ -124,20 +123,17 @@ int	main(int ac, char **av, char **enve)
 		args.str = readline("$>");
 		if (!args.str)
 		{
-			close(args.tin);
 			close(args.tout);
-			close(args.oin);
-			close(args.oout);
+			close(args.tin);
+			fdcloser(&args);
 			free_array(env);
+			// free_all(&args, &data);
 			return (0);
 		}
 		if (ft_parse(&args, &data) == 1 && args.str)
 			launch_ast(env, &args, &data);
 		free_all(&args, &data);
-		close(args.tin);
-		// close(args.tout);
-		close(args.oin);
-		close(args.oout);
+		fdcloser(&args);
 	}
 	free_all(&args, &data);
 	return (0);

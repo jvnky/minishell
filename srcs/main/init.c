@@ -20,6 +20,8 @@ int	init_args(t_args *args)
 	args->tout = dup(STDOUT_FILENO);
 	args->oout = 0;
 	args->oin = 0;
+	args->fdtab = NULL;
+	args->imax = -1;
 	return (1);
 }
 

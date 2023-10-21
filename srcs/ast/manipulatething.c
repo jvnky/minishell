@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/21 00:59:15 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/21 04:55:32 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,69 @@
 #include "../../include/minishell.h"
 #include "../../include/env.h"
 
+int	fdgarbage(t_args *fd, int fdn)
+{
+	int *tmp;
+	int i;
+	int k;
+
+	k = 0;
+	i = 0;
+
+	// printf("fdn = %d\n",fdn);
+	while(k == 0 && i <= fd->imax)
+	{
+		if(fdn == fd->fdtab[i])
+			k++;
+		i++;
+	}
+	// printf("k = %d  i_max = %d\n",k,fd->imax);
+	i = 0;
+	if(k == 0)
+	{
+		fd->imax++;
+		tmp = malloc(sizeof(int) * (fd->imax + 1));
+		if(!tmp)
+			return (0);
+		while(i < fd->imax)
+		{
+			tmp[i] = fd->fdtab[i];
+			// printf("rajoute fd = %d\n",fd->fdtab[i]);
+			i++;
+		}
+		tmp[i] = fdn;
+		free(fd->fdtab);
+		fd->fdtab=tmp;
+		// printf("rajoute fd = %d\n",fd->fdtab[i]);
+
+	}
+
+	return (1);
+}
+
+void	fdcloser(t_args *fd)
+{
+	int	i;
+
+	i = 0;
+	// printf("IMAX = %d\n",fd->imax);
+	// while(i <= fd->imax)
+	// 	printf("fd = %d\n",fd->fdtab[i++]);
+	// i = 0;
+	while(i <= fd->imax)
+	{
+		// printf("Closing fd = %d\n",fd->fdtab[i]);
+		if(fd->fdtab[i] != 0 && fd->fdtab[i] != 1)
+		{
+			close(fd->fdtab[i]);
+			close(fd->fdtab[i]);
+		}
+		i++;
+	}
+	free(fd->fdtab);
+	fd->fdtab = NULL;
+
+}
 
 char	*get_absolute_path(char **cmd,char **env)
 {
@@ -224,12 +287,14 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 			node->ipf = ".temp_input_file";
 		file_fd = open(node->ipf, O_RDONLY);
 		close(STDIN_FILENO);
+		fdgarbage(fd, file_fd);
 		dup2(file_fd, STDIN_FILENO);
 		close(file_fd);
 	}
 	else if (fd->tin != STDIN_FILENO)
 	{
 		close(STDIN_FILENO);
+		fdgarbage(fd, fd->tin);
 		dup2(fd->tin, STDIN_FILENO);
 		close(fd->tin);
 	}
@@ -240,12 +305,14 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 		else
 			file_fd = open(node->opf, O_WRONLY | O_CREAT, 0644);
 		close(STDOUT_FILENO);
+		fdgarbage(fd, file_fd);
 		dup2(file_fd, STDOUT_FILENO);
 		close(file_fd);
 	}
 	else if (fd->tout != STDOUT_FILENO)
 	{
 		close(STDOUT_FILENO);
+		fdgarbage(fd, fd->tout);
 		dup2(fd->tout, STDOUT_FILENO);
 		close(fd->tout);
 	}
@@ -254,6 +321,7 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 		env = execbuiltin(node, checkbuiltin, env, fd, data);
 	else
 	{
+		fdgarbage(fd, 7);
 		pids = fork();
 		run_signals(1);
 		if (pids == -1)
@@ -263,38 +331,65 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 		}
 		else if (pids == 0)
 		{
+			write(1,"1\n",2);
+			// close(7);
+			 fdcloser(fd);
 			if (access(args[0], F_OK) != 0)
 			{
 				bins = get_absolute_path(args, env);
 				if (!bins)
 					bins = args[0];
+				// puts("fdp");
+				close(6);
+				close(5);
+				// fdcloser(fd);
 				if (execve(bins, args, NULL) == -1)
 				{
+					// puts("GROSfdp");
 					free(bins);
-					// free_array(env);
 					bins = NULL;
-					close(fd->tin);
-					close(fd->tout);
-					close(fd->oin);
-					close(fd->oout);
+					// close(fd->tin);
+					// close(fd->tout);
+					// close(fd->oin);
+					// close(fd->oout);
 					free_all(fd, data);
+					// close(4);
+					// close(5);
+					// close(6);
+					// close(7);
 					// free_array(args);
+					puts("2");
 					exit(3);
 				}
-					close(fd->tin);
-					close(fd->tout);
-					close(fd->oin);
-					close(fd->oout);
+				// puts("GROSEMCI:ERfdp");
+					// close(fd->tin);
+					// close(fd->tout);
+					// close(fd->oin);
+					// close(fd->oout);
+					// close(4);
+					// close(5);
+					// close(6);
+					// close(7);
+					puts("3");
 
 			}
 			else
 			{
+				// puts("tam");
+				// close(6);
+				// close(5);
+				// fdcloser(fd);
 				if (execve(args[0], args, NULL) == -1)
 				{
-					close(fd->tin);
-					close(fd->tout);
-					close(fd->oin);
-					close(fd->oout);
+					// puts("4");
+					// close(fd->tin);
+					// close(fd->tout);
+					// close(fd->oin);
+					// close(fd->oout);
+					// close(4);
+					// close(5);
+					// close(6);
+					// close(7);
 					// free_array(env);
 					free_all(fd, data);
 					// free_array(args);
@@ -302,17 +397,27 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 				}
 				// 	close(STDIN_FILENO);
 				// close(STDOUT_FILENO);
-					close(fd->tin);
-					close(fd->tout);
-					close(fd->oin);
-					close(fd->oout);
+				// puts("5");
+				// 	close(fd->tin);
+				// 	close(fd->tout);
+				// 	close(fd->oin);
+				// 	close(fd->oout);
+				// 	close(4);
+				// 	close(5);
+				// 	close(6);
+				// 	close(7);
 			}
 			// close(STDIN_FILENO);
 			// close(STDOUT_FILENO);
-			close(fd->tin);
-			close(fd->tout);
-			close(fd->oin);
-			close(fd->oout);
+			// puts("6");
+			// close(fd->tin);
+			// close(fd->tout);
+			// close(fd->oin);
+			// close(fd->oout);
+			// close(4);
+			// close(5);
+			// close(6);
+			// close(7);
 			// free_array(env);
 			free(bins);
 			free_all(fd, data);
@@ -329,7 +434,6 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 					g_ret_number = (status / 2) - 1;
 					 printf("127: command not found \n"  );
 					// free_all(fd, data);
-
 					// free_array(args);
 
 					free(args);
@@ -354,12 +458,18 @@ char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 	// tmp = 0;
 	// close(fd->oin);
 	// close(fd->oout);
-	printf("Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+	// printf("Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 	// dup2(STDIN_FILENO,fd->oin);
 	// dup2(STDOUT_FILENO,fd->oout);
+	fdgarbage(fd, fd->oin);
+	fdgarbage(fd, fd->oout);
+	fdgarbage(fd, fd->tin);
+	fdgarbage(fd, fd->tout);
 	fd->oin = dup(STDIN_FILENO);
 	fd->oout = dup(STDOUT_FILENO);
-		printf("1  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+	fdgarbage(fd, fd->oin);
+	fdgarbage(fd, fd->oout);
+		// printf("1  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 	// printf("1%s 1\n",env[2]);
 	if(node->command[0] == '\"')
 		node->command = chekg(node->command);
@@ -376,30 +486,41 @@ char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 		}
 		// close(fd->tout);
 		// dup2(fd->tout,tmp);
+		// printf("1.0  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+		fdgarbage(fd, fd->tout);
 		fd->tout = pipe_fds[1];
+		fdgarbage(fd, fd->tout);
 		// dup2(pipe_fds[1],fd->tout);
-		printf("1.1Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+		// printf("1.1Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		// close(fd->oin);
 		// close(fd->oout);
+		fdgarbage(fd,pipe_fds[1]);
 		executeast(node->left, env, fd, data);
-		printf("1.3Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		close(pipe_fds[1]);
+		// printf("1.3Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+		fdgarbage(fd,fd->tin);
 		close(fd->tin);
 		dup2(pipe_fds[0], fd->tin);
+		fdgarbage(fd, fd->tin);
+		fdgarbage(fd,pipe_fds[0]);
 		close(pipe_fds[0]);
-		printf("1.5Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+		// printf("1.5Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		executeast(node->right, env, fd, data);
 	}
 	else
 	{
 		printf("2  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+		fdgarbage(fd, fd->oin);
 		env = executeCommand(node, fd, data, env);
 	}
-		printf("3 Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+		// printf("3 Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+	fdgarbage(fd, fd->oin);
+	fdgarbage(fd, fd->oout);
 	dup2(fd->oin, STDIN_FILENO);
 	dup2(fd->oout, STDOUT_FILENO);
-
-		printf("4 Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
+	fdgarbage(fd, fd->oin);
+	fdgarbage(fd, fd->oout);
+		// printf("4 Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 	// close(tmp);
 	close(fd->oin);
 	close(fd->oout);

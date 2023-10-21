@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 21:37:14 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/20 04:17:14 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/21 03:35:19 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,5 @@ void	free_array(char **array);
 
 char	*nospace(char *src, char **env);
 int		ft_strcmpa(char *s1, char *s2);
+void	fdcloser(t_args *fd);
 #endif

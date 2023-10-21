@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 11:07:02 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/20 00:39:36 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/21 03:27:53 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 int	ft_strlen(char *str)
 {
 	int	i;
-
+	if(!str)
+		return 0;
 	i = -1;
 	while (str[++i])
 		;
