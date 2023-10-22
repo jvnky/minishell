@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 21:51:06 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/20 04:14:05 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/21 22:46:03 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,73 @@ char	*chekg(char *src)
 	return (dst);
 }
 
+char	*chekgo(char *src,char *tabsign)
+{
+	int		i;
+	char	*dst;
+	int 	check;
+
+	check = 0;
+	i = 0;
+	if(tabsign[0])
+		check++;
+	if(tabsign[1])
+		check++;
+	if (!src)
+		return (NULL);
+	while (src[i])
+		i++;
+	if (i == 2 || i == 0)
+		return (NULL);
+	dst = malloc(sizeof(char) * (i + 1 - check));
+	dst[i - check] = '\0';
+	while ((i - check > 0))
+	{
+		if (tabsign[0] && tabsign[1])
+			dst[i - 3] = src[i - 2];
+		else if (tabsign[0])
+			dst[i - 2] = src[i - 1];
+		else if (tabsign[1])
+			dst[i - 2] = src[i - 2];
+		i--;
+	}
+	return (dst);
+}
+
 char	*nospace(char *src, char **env)
 {
 	int		i;
 	int		j;
 	char	**dst;
+	char	*tmp;
+	char	tabsign[2];
 
+	tabsign[0] = '\0';
+	tabsign[1] = '\0';
 	i = 0;
-	dst = ft_split(src, '\n');
+	dst = ft_split(src, ' ');
 	if (!dst)
 		return (NULL);
 	while (dst[i])
 	{
+		j = -1;
+		while (dst[i][++j])
+			;
+		if (dst[i][0] == '\'' || dst[i][0] == '\"')
+			tabsign[0] = dst[i][0];
+		printf("ntm : %d\n", j);
+		if (dst[i][j - 1] == '\'' || dst[i][j - 1] == '\"')
+		{
+			puts("NTM BATARD");
+			tabsign[1] = dst[i][j - 1];
+			printf("ntm : %c\n", tabsign[1]);
+		}
+		if (tabsign[0] || tabsign[1])
+		{
+			tmp = chekgo(dst[i], tabsign);
+			free(dst[i]);
+			dst[i] = tmp;
+		}
 		j = -1;
 		while (dst[i][++j] && dst[i][j] != '$')
 			;
@@ -60,6 +115,26 @@ char	*nospace(char *src, char **env)
 	src = new_src(dst, i, src);
 	if (!src)
 		return (NULL);
+	if(tabsign[0])
+	{
+		if (tabsign[0] == '\"')
+			tmp = ft_strjoin("\"", src);
+		if (tabsign[0] == '\'')
+			tmp = ft_strjoin("\'", src);
+		free(src);
+		src = truecpy(tmp);
+		free(tmp);
+	}
+	if (tabsign[1])
+	{
+		if (tabsign[1] == '\"')
+			tmp = ft_strjoin(src, "\"");
+		if (tabsign[1] == '\'')
+			tmp = ft_strjoin(src, "\'");
+		free(src);
+		src = truecpy(tmp);
+		free(tmp);
+	}
 	return (src);
 }
 

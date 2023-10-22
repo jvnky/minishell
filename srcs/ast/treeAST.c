@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 00:37:03 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/20 08:32:29 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/22 04:41:57 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,33 @@ t_node	*createnode(char *command)
 	node->right = NULL;
 	node->app = 0;
 	return (node);
+}
+
+void	cleannode(t_node *root)
+{
+	int	i;
+
+	i = 0;
+	if (root == NULL)
+		return ;
+	if (root->arguments)
+	{
+		while (root->arguments[i])
+		{
+			free(root->arguments[i]);
+			root->arguments[i] = NULL;
+			i++;
+		}
+		free(root->arguments);
+		root->arguments = NULL;
+	}
+	if (root->command)
+	{
+		free(root->command);
+		root->command = NULL;
+	}
+	free(root);
+	root = NULL;
 }
 
 int	setarguments(t_node *node, char **arguments)
@@ -71,33 +98,42 @@ int	checkopc(char command)
 		return (0);
 }
 
-t_node	*buildast(char ***commands, int lent)
+
+
+// void	astone(t_node	*op,t_node	*current,t_node	*prev,t_node	*root)
+// {
+
+
+// 	// return (1);
+// }
+
+
+t_node	*buildast(char ***commands, int lent,t_num *num)
 {
 	t_node	*root;
 	t_node	*current;
 	t_node	*prev;
 	t_node	*newnode;
 	t_node	*operatornode;
-	int		i;
-	int		j;
 	char	*command;/*trop de variable*/
 
 	root = NULL;
 	current = NULL;
 	prev = NULL;
-	i = 0;
-	while (i < lent)
+	command = NULL;
+	newnode = NULL;
+	while (num->i < lent)
 	{
-		j = 0;
-		while (commands[i][j])
+		num->j = 0;
+		while (commands[num->i][num->j])
 		{
-			command = truecpy(commands[i][j]);
+
+			command = truecpy(commands[num->i][num->j]);
 			if (ft_strcmpa(command, "|") == 0)
 			{
 				operatornode = createnode(command);
 				if (!operatornode)
 					return (NULL);
-				// free(command);
 				if (root == NULL)
 				{
 					operatornode->left = current;
@@ -116,136 +152,69 @@ t_node	*buildast(char ***commands, int lent)
 				newnode = createnode(command);
 				if (!newnode)
 					return (NULL);
-				// free(command);
+				printf("comm = %s\n",newnode->command);
 				if (checkop(newnode->command))
 				{
-					if ((i == 0) || (i > 0 && commands[i][j - 1] != NULL
-						&& checkopc(commands[i][j - 1][0]) == 0))
+					if ((num->i == 0) || (num->i > 0 && commands[num->i][num->j - 1] != NULL
+						&& checkopc(commands[num->i][num->j - 1][0]) == 0))
 					{
-						if ((i == 0 && j == 0) || i > 0)
+						if ((num->i == 0 && num->j == 0) || num->i > 0)
 								current = newnode;
 					}
-					if (i == lent - 1 && i > 0 && prev)
-						prev->right = current;
-					if (commands[i][j + 1] && (commands[i][j + 1][0] == '-'
-						|| checkop(commands[i][j + 1])))
+					// printf("current = %s , i =%d j=%d  LEN = %d  K = %d\n",current->command,num->i,num->j,lent,num->k);
+					if (num->i == lent - 1 && num->i > 0 && prev)
+							prev->right = current;
+					if (commands[num->i][num->j + 1] && (commands[num->i][num->j + 1][0] == '-'
+						|| checkop(commands[num->i][num->j + 1])))
 					{
-						j += setarguments(current, &(commands[i][j + 1]));
-						if (i > 0)
-							j++;
+						num->j += setarguments(current, &(commands[num->i][num->j + 1]));
+						if (num->i > 0)
+							num->j++;
 					}
-					if ((commands[i + 1] && commands[i + 1][0][0] == '>')
-							|| (commands[i][j + 1]
-							&& commands[i][j + 1][0] == '>'))
+					if (commands[num->i + 1] && commands[num->i + 1][0][0] == '>')
 					{
-						current->opf = commands[i + 1][1];
-						if (commands[i + 1][0][1] == '>')
+
+						 puts("FFFF");
+						current->opf = commands[num->i + 1][1];
+						// printf("1FILE = %s\n",current->opf);
+						if (!current->opf)
+						{
+							cleannode(newnode);
+							return (NULL);
+						}
+						// printf("FILE = %s\n",current->opf);
+						if (commands[num->i + 1][0][1] == '>')
 							current->app = 1;
+						 num->i++;
+						if (num->i == lent - 1 && num->i > 0 && prev)
+							prev->right = current;
+						 break;
+						// num->j++;
 					}
-					if ((commands[i + 1] && commands[i + 1][0][0] == '<')
-							|| (commands[i][j + 1]
-							&& commands[i][j + 1][0] == '<'))
-							current->ipf = commands[i + 1][1];
-					if (commands[i + 1] && commands[i + 1][0][0] == '<'
-							&& commands[i + 1][0][1] == '<')
+					else if (commands[num->i + 1] && commands[num->i + 1][0][0] == '<')
 					{
-						current->app = 2;
-						// current = astheredocs(commands, lent, i, j);
-						// if (!root && current)
-						// 	root = current;
-						// if (prev)
-						// 	prev->right = current;
-						// return (root);
+						current->ipf = commands[num->i + 1][1];
+						if (!current->ipf)
+						{
+							cleannode(newnode);
+							return (NULL);
+						}
 					}
+					if (commands[num->i + 1] && commands[num->i + 1][0][0] == '<'
+							&& commands[num->i + 1][0][1] == '<')
+						{
+							current->app = 2;
+						}
 				}
 			}
-			j++;
+			num->j++;
 		}
-		i++;
+		num->i++;
 	}
 
 	if (!root && current)
 		root = current;
+	// cleannode(newnode);
 	return (root);
 }
 
-// t_node	*astheredocs(char ***commands, int lent, int i, int j)
-// {
-// 	t_node	*root;
-// 	t_node	*current;
-// 	t_node	*prev;
-// 	t_node	*operatornode;
-// 	t_node	*newnode;
-// 	char	*command;
-
-// 	root = NULL;
-// 	current = NULL;
-// 	prev = NULL;
-// 	while (i < lent)
-// 	{
-// 		while (commands[i][j])
-// 		{
-// 			command = truecpy(commands[i][j]);
-// 			if (ft_strcmpa(command, "|") == 0)
-// 			{
-// 				operatornode = createnode(command);
-// 				if (!root)
-// 				{
-// 					operatornode->left = current;
-// 					prev = operatornode;
-// 					root = operatornode;
-// 				}
-// 				else
-// 				{
-// 					operatornode->left = current;
-// 					prev->right = operatornode;
-// 				}
-// 				prev = operatornode;
-// 			}
-// 			else
-// 			{
-// 				newnode = createnode(command);
-// 				if (checkop(newnode->command))
-// 				{
-// 					if ((i == 0) || (i > 0 && commands[i][j - 1]
-// 						&& checkopc(commands[i][j - 1][0]) == 0))
-// 					{
-// 						if ((i == 0 && j == 0) || i > 0)
-// 							current = newnode;
-// 					}
-// 					if (i == lent - 1 && i > 0 && prev)
-// 						prev->right = current;
-// 					printf("ALLO %s\n",commands[i][j+1]);
-// 					if (!commands[i][j + 1] && (commands[i][j + 1][0] == '-'
-// 						|| checkop(commands[i][j + 1])))
-// 					{
-// 						while (commands[i][j + 1]
-// 							&& checkop(commands[i][j + 1]))
-// 						{
-// 							setarguments(current, &(commands[i][j + 1]));
-// 							j++;
-// 						}
-// 					}
-// 					if (commands[i + 1] && commands[i + 1][0][0] == '>')
-// 						current->opf = truecpy(commands[i + 1][1]);
-// 					if (commands[i + 1]
-// 						&& commands[i + 1][0][0] == '>'
-// 						&& commands[i + 1][0][1] == '>')
-// 						current->app = 1;
-// 					if (commands[i + 1] && commands[i + 1][0][0] == '<')
-// 						current->ipf = truecpy(commands[i + 1][1]);
-// 					if (commands[i + 1]
-// 						&& commands[i + 1][0][0] == '<'
-// 						&& commands[i + 1][0][1] == '<')
-// 						current->app = 2;
-// 				}
-// 			}
-// 		j++;
-// 		}
-// 	i++;
-// 	j = 0;
-// 	}
-// 	if (!root && current)
-// 		root = current;
-// 	return (root);
-// }

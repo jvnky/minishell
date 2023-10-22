@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 08:48:52 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/21 04:02:53 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/22 04:41:16 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,73 @@ static char	**init_env(char **enve, char **env)
 	}
 	return (env);
 }
+void printAST(t_node* root) {
+    if (root == NULL) {
+        return;
+    }
+
+    printf("Command: %s\n", root->command);
+
+    if (root->numarguments > 0) {
+        printf("Arguments: ");
+        for (int i = 0; i < root->numarguments; i++) {
+           printf(" i == %d    %s ", i,root->arguments[i]);
+        }
+        printf("\n");
+    }
+     if (root->ipf != NULL) {
+        printf("Input File: %s  ", root->ipf);
+         if(root->app == 1)
+            printf("  app1\n");
+        else if (root->app == 2)
+            printf("  app2\n");
+        else
+            printf("\n");
+    }
+
+    if (root->opf != NULL) {
+        printf("Output File: %s ", root->opf);
+        if(root->app == 1)
+            printf("  app1\n");
+        else if (root->app == 2)
+            printf("  app2\n");
+        else
+            printf("\n");
+    }
+   // printf("Left Node:\n");
+     printAST(root->left);
+
+    //printf("Right Node:\n");
+    printAST(root->right);
+}
+
 
 void	launch_ast(char **env, t_args *args, t_data *data)
 {
 	t_node	*root;
-
+	t_num	num;
 	// args->oin = dup(STDIN_FILENO);
 	// args->oout = dup(STDOUT_FILENO);
+	num.i = 0;
+	// num->j = 0;
 	if (args->str[0])
 	{
 		add_history(args->str);
-		root = buildast(data->parse, data->parse_i + 1);
+
+		int i = 0;
+		while(data->parse[i])
+		{
+			int j = 0;
+			while(data->parse[i][j])
+			{
+				printf("%s  i = %d j = %d\n",data->parse[i][j],i,j);
+				j++;
+			}
+			i++;
+		}
+
+		root = buildast(data->parse, data->parse_i + 1, &num);
+		printAST(root);
 		if (root)
 			env = executeast(root, env, args, data);
 

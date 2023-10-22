@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_double_quote.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:59:32 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/13 14:17:43 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/21 22:33:52 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	quote(t_args *args, t_data *data, char c, int k)
 		str[j++] = args->str[args->i++];
 	if (add_command(data, str, 0) == 0)
 		return (0);
+	free(str);
 	return (1);
 }
 

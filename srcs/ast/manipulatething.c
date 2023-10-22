@@ -6,7 +6,7 @@
 /*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 00:28:28 by ychair            #+#    #+#             */
-/*   Updated: 2023/10/21 04:55:32 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/22 03:41:01 by ychair           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,41 +24,34 @@
 
 int	fdgarbage(t_args *fd, int fdn)
 {
-	int *tmp;
-	int i;
-	int k;
+	int	*tmp;
+	int	i;
+	int	k;
 
 	k = 0;
 	i = 0;
-
-	// printf("fdn = %d\n",fdn);
-	while(k == 0 && i <= fd->imax)
+	while (k == 0 && i <= fd->imax)
 	{
-		if(fdn == fd->fdtab[i])
+		if (fdn == fd->fdtab[i])
 			k++;
 		i++;
 	}
-	// printf("k = %d  i_max = %d\n",k,fd->imax);
 	i = 0;
-	if(k == 0)
+	if (k == 0)
 	{
 		fd->imax++;
 		tmp = malloc(sizeof(int) * (fd->imax + 1));
-		if(!tmp)
+		if (!tmp)
 			return (0);
-		while(i < fd->imax)
+		while (i < fd->imax)
 		{
 			tmp[i] = fd->fdtab[i];
-			// printf("rajoute fd = %d\n",fd->fdtab[i]);
 			i++;
 		}
 		tmp[i] = fdn;
 		free(fd->fdtab);
-		fd->fdtab=tmp;
-		// printf("rajoute fd = %d\n",fd->fdtab[i]);
-
+		fd->fdtab = tmp;
 	}
-
 	return (1);
 }
 
@@ -67,14 +60,9 @@ void	fdcloser(t_args *fd)
 	int	i;
 
 	i = 0;
-	// printf("IMAX = %d\n",fd->imax);
-	// while(i <= fd->imax)
-	// 	printf("fd = %d\n",fd->fdtab[i++]);
-	// i = 0;
-	while(i <= fd->imax)
+	while (i <= fd->imax)
 	{
-		// printf("Closing fd = %d\n",fd->fdtab[i]);
-		if(fd->fdtab[i] != 0 && fd->fdtab[i] != 1)
+		if (fd->fdtab[i] != 0 && fd->fdtab[i] != 1)
 		{
 			close(fd->fdtab[i]);
 			close(fd->fdtab[i]);
@@ -151,7 +139,7 @@ char	**execbuiltin(t_node *node, int checkbuiltin, char **env, t_args *fd, t_dat
 		while(node->arguments && node->arguments[i])
 		{
 			if (i > 0)
-				write(1, " ", 1);
+				write(1, " ", 1);// LOVLE
 			if(node->arguments[i][0] == '\'' || node->arguments[i][0] == '\"')
 			{
 				if(node->arguments[i][0] == '\"')
@@ -164,7 +152,6 @@ char	**execbuiltin(t_node *node, int checkbuiltin, char **env, t_args *fd, t_dat
 				}
 				else
 				{
-
 					node->arguments[i] = chekg(node->arguments[i]);
 				}
 			}
@@ -209,53 +196,58 @@ char	**execbuiltin(t_node *node, int checkbuiltin, char **env, t_args *fd, t_dat
 	return (env);
 }
 
-void     ft_heredocs(t_node *node,char **env)
+void	ft_heredocs(t_node *node,char **env)
 {
 
-    int fd;
-	char *tmp;
-	 char *line;
-    if (node == NULL) {
-        return ;
-    }
+	int	fd;
+	char	*dst;
+	char	*line;
+	char	*tmp;
 
-    // Open a temporary file to redirect input
-    fd = open(".temp_input_file", O_TRUNC | O_WRONLY | O_CREAT, 0644);
-    if (fd == -1) {
-        perror("Failed to open temporary file");
-        return;
-    }
+	if (node == NULL) {
+		return ;
+	}
 
-    // Redirect standard input to the temporary file
-
-    //   printf("Heredoc FD: %d , INPUTEFILE = %s\n", node->stdn, node->ipf);
-    line = NULL;
-    // if (!line)
-    //     puts("FUCKKKKLINE");
-    // size_t len = 0;
-
-        run_signals(1);
-        while (1)
+	fd = open(".temp_input_file", O_TRUNC | O_WRONLY | O_CREAT, 0644);
+	if (fd == -1) {
+		perror("Failed to open temporary file");
+		return;
+	}
+	line = NULL;
+	run_signals(1);
+	while (1)
+	{
+		line = readline(">");
+		if (!line)
 		{
-			line = readline(">");
-			if(!line)
-			{
-				break;
-			}
-			if (strncmp(line, node->ipf,ft_strlen(line)-1) == 0) {
-				// puts("FINISH");
-                break; // Stop reading at the delimiter
-            }
-			tmp = nospace(line,env);
-			tmp = ft_strjoin(tmp,"\n");
+			break;
+		}
+		if (strncmp(line, node->ipf,ft_strlen(line)-1) == 0) {
+			// puts("FINISH");
+			break; // Stop reading at the delimiter
+		}
+		if(line[0] != '\0')
+		{
+
+			dst = nospace(line,env);
+			printf("dst = %s\n",dst);
+			tmp = ft_strjoin(dst,"\n");
 			write(fd,tmp,ft_strlen(tmp));
-        }
-    // free(line); // Free allocated memory
+		}
+		else
+			write(fd,"\n",1);
+
+
+		// free(line);
+		// line = NULL;
+		free(tmp);
+		tmp = NULL;
+		free(dst);
+		dst = NULL;
+	}
 	free(line);
 	line = NULL;
-	free(tmp);
-	tmp = NULL;
-    close(fd);
+	close(fd);
 
 }
 
@@ -300,10 +292,12 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 	}
 	if (node->opf != NULL)
 	{
+		// printf("opf = %s\n",node->opf);
 		if (node->app == 1)
 			file_fd = open(node->opf, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
 			file_fd = open(node->opf, O_WRONLY | O_CREAT, 0644);
+
 		close(STDOUT_FILENO);
 		fdgarbage(fd, file_fd);
 		dup2(file_fd, STDOUT_FILENO);
@@ -331,97 +325,35 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 		}
 		else if (pids == 0)
 		{
-			write(1,"1\n",2);
-			// close(7);
-			 fdcloser(fd);
+			fdcloser(fd);
 			if (access(args[0], F_OK) != 0)
 			{
 				bins = get_absolute_path(args, env);
 				if (!bins)
 					bins = args[0];
-				// puts("fdp");
 				close(6);
 				close(5);
-				// fdcloser(fd);
 				if (execve(bins, args, NULL) == -1)
 				{
-					// puts("GROSfdp");
 					free(bins);
 					bins = NULL;
-					// close(fd->tin);
-					// close(fd->tout);
-					// close(fd->oin);
-					// close(fd->oout);
 					free_all(fd, data);
-					// close(4);
-					// close(5);
-					// close(6);
-					// close(7);
-					// free_array(args);
 					puts("2");
 					exit(3);
 				}
-				// puts("GROSEMCI:ERfdp");
-					// close(fd->tin);
-					// close(fd->tout);
-					// close(fd->oin);
-					// close(fd->oout);
-					// close(4);
-					// close(5);
-					// close(6);
-					// close(7);
 					puts("3");
 
 			}
 			else
 			{
-				// puts("tam");
-				// close(6);
-				// close(5);
-				// fdcloser(fd);
 				if (execve(args[0], args, NULL) == -1)
 				{
-					// puts("4");
-					// close(fd->tin);
-					// close(fd->tout);
-					// close(fd->oin);
-					// close(fd->oout);
-					// close(4);
-					// close(5);
-					// close(6);
-					// close(7);
-					// free_array(env);
 					free_all(fd, data);
-					// free_array(args);
 					exit(5);
 				}
-				// 	close(STDIN_FILENO);
-				// close(STDOUT_FILENO);
-				// puts("5");
-				// 	close(fd->tin);
-				// 	close(fd->tout);
-				// 	close(fd->oin);
-				// 	close(fd->oout);
-				// 	close(4);
-				// 	close(5);
-				// 	close(6);
-				// 	close(7);
 			}
-			// close(STDIN_FILENO);
-			// close(STDOUT_FILENO);
-			// puts("6");
-			// close(fd->tin);
-			// close(fd->tout);
-			// close(fd->oin);
-			// close(fd->oout);
-			// close(4);
-			// close(5);
-			// close(6);
-			// close(7);
-			// free_array(env);
 			free(bins);
 			free_all(fd, data);
-			// free_array(args);
 			exit(0);
 		}
 		else
@@ -432,35 +364,22 @@ char	**executeCommand(t_node *node, t_args *fd, t_data * data, char **env)
 				if (WEXITSTATUS(status) != 0)
 				{
 					g_ret_number = (status / 2) - 1;
-					 printf("127: command not found \n"  );
-					// free_all(fd, data);
-					// free_array(args);
-
+					printf("127: command not found \n"  );
 					free(args);
-					// args= NULL;
 					return (env);
 				}
 
 			}
 		}
 	}
-	// free_array(args);
 	free(args);
-	// args= NULL;
 	return (env);
 }
 
 char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 {
 	int	pipe_fds[2];
-	// int tmp;
 
-	// tmp = 0;
-	// close(fd->oin);
-	// close(fd->oout);
-	// printf("Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
-	// dup2(STDIN_FILENO,fd->oin);
-	// dup2(STDOUT_FILENO,fd->oout);
 	fdgarbage(fd, fd->oin);
 	fdgarbage(fd, fd->oout);
 	fdgarbage(fd, fd->tin);
@@ -469,14 +388,12 @@ char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 	fd->oout = dup(STDOUT_FILENO);
 	fdgarbage(fd, fd->oin);
 	fdgarbage(fd, fd->oout);
-		// printf("1  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
-	// printf("1%s 1\n",env[2]);
-	if(node->command[0] == '\"')
-		node->command = chekg(node->command);
-	node->command = envdol(node->command, env);
-	// printf("1%s 5\n",node->command);
+
 	if (!node)
 		return (NULL);
+	if (node->command[0] == '\"')
+		node->command = chekg(node->command);
+	node->command = envdol(node->command, env);
 	if (strcmp(node->command, "|") == 0)
 	{
 		if (pipe(pipe_fds) == -1)
@@ -484,47 +401,33 @@ char	**executeast(t_node *node, char **env, t_args *fd, t_data *data)
 			perror("Pipe creation failed");
 			exit(1);
 		}
-		// close(fd->tout);
-		// dup2(fd->tout,tmp);
-		// printf("1.0  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		fdgarbage(fd, fd->tout);
 		fd->tout = pipe_fds[1];
 		fdgarbage(fd, fd->tout);
-		// dup2(pipe_fds[1],fd->tout);
-		// printf("1.1Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
-		// close(fd->oin);
-		// close(fd->oout);
-		fdgarbage(fd,pipe_fds[1]);
+		fdgarbage(fd, pipe_fds[1]);
 		executeast(node->left, env, fd, data);
 		close(pipe_fds[1]);
-		// printf("1.3Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
-		fdgarbage(fd,fd->tin);
 		close(fd->tin);
 		dup2(pipe_fds[0], fd->tin);
 		fdgarbage(fd, fd->tin);
-		fdgarbage(fd,pipe_fds[0]);
+		fdgarbage(fd, pipe_fds[0]);
 		close(pipe_fds[0]);
-		// printf("1.5Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		executeast(node->right, env, fd, data);
 	}
 	else
 	{
-		printf("2  Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 		fdgarbage(fd, fd->oin);
 		env = executeCommand(node, fd, data, env);
 	}
-		// printf("3 Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
 	fdgarbage(fd, fd->oin);
 	fdgarbage(fd, fd->oout);
 	dup2(fd->oin, STDIN_FILENO);
 	dup2(fd->oout, STDOUT_FILENO);
 	fdgarbage(fd, fd->oin);
 	fdgarbage(fd, fd->oout);
-		// printf("4 Cmd = %s  oin =%d, oout = %d tin = %d tout = %d\n",node->command,fd->oin,fd->oout,fd->tin,fd->tout);
-	// close(tmp);
 	close(fd->oin);
 	close(fd->oout);
 	close(fd->tin);
-	close(fd->tout); // A CHEFK
+	close(fd->tout);
 	return (env);
 }
