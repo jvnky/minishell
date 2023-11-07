@@ -52,3 +52,14 @@ int	init_struct(t_args *args, t_data *data)
 	}
 	return (1);
 }
+
+void	initnum(t_num *num)
+{
+	num->root = NULL;
+	num->current = NULL;
+	num->prev = NULL;
+	num->command = NULL;
+	num->newnode = NULL;
+	num->i = -1;
+	num->checkr = -1;
+}

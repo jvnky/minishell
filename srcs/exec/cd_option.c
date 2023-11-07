@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 00:02:54 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/16 22:07:04 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/25 23:42:24 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*cd_option_utils(char **env, char *path, char *str)
 
 	i = env_value(env, str);
 	j = -1;
-	if (!env[i])
+	if (i == -1)
 		return (NULL);
 	while (env[i][++j])
 		;
@@ -109,5 +109,25 @@ char	**cd_minus(char **env, char *path)
 		return (NULL);
 	free(dst);
 	free(new_path);
+	return (env);
+}
+
+char	**cd_utils(char **env, char *path)
+{
+	char	*dst;
+
+	dst = ft_strjoin("OLDPWD=", path);
+	if (!dst)
+		return (NULL);
+	env = reset_env(dst, env_value(env, "OLDPWD"), env);
+	if (!env)
+		return (NULL);
+	path = getcwd(path, PATH_MAX);
+	free(dst);
+	dst = ft_strjoin("PWD=", path);
+	env = reset_env(dst, env_value(env, "PWD"), env);
+	if (!env)
+		return (NULL);
+	free(dst);
 	return (env);
 }

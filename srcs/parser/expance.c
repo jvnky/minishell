@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expance.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 21:33:41 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/20 06:29:08 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/24 02:07:31 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[++j])
 		dst[++i - 1] = s2[j];
 	dst[i] = '\0';
-	// free(s1);
 	return (dst);
 }
 
@@ -45,35 +44,6 @@ int	check_white_space(t_args *args, int i)
 		return (1);
 	else
 		return (0);
-}
-
-int	start_expance(t_args *args, char c, int k)
-{
-	char	*tmp;
-	char	*dst;
-	size_t	n;
-	int		i;
-
-	n = 64;
-	while (k == 0)
-	{
-		i = 0;
-		if (c == '\"')
-			write(1, "dquote> ", 8);
-		else
-			write(1, "quote> ", 7);
-		getline(&tmp, &n, stdin);
-		while (tmp[i] && tmp[i] != c)
-			i++;
-		if (tmp[i])
-			k++;
-		dst = ft_strjoin(args->str, tmp);
-		if (!dst == 0)
-			return (0);
-		free(args->str);
-		args->str = dst;
-	}
-	return (1);
 }
 
 int	parse_expance(t_args *args, t_data *data, char c)

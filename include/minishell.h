@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 09:28:20 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/20 01:10:16 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/26 00:30:15 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ extern int		g_ret_number;
 
 char	*ft_atoa(char *str);
 char	*ft_itoa(int n);
+char	**setup(char **enve);
 
+int		contrl_d(t_args *args, char **env);
 int		init_struct(t_args *args, t_data *data);
 int		init_data(t_data *data);
 int		init_args(t_args *args);
@@ -50,7 +52,8 @@ void	free_all(t_args *args, t_data *data);
 void	freeast(t_node *root);
 void	free_data(t_data *data);
 void	free_args(t_args *args);
+void	initnum(t_num *num);
 void	setup_term(void);
-
-
+char	**init_env(char **enve, char **env);
+int		check_cd_option(char *str);
 #endif

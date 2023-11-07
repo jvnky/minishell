@@ -1,41 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/23 03:17:51 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/25 23:18:34 by cofoundo         ###   ########.fr       */
+/*   Created: 2023/10/24 04:37:46 by cofoundo          #+#    #+#             */
+/*   Updated: 2023/10/24 04:39:25 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	run_signals(int sig)
+char	**setup(char **enve)
 {
-	if (sig == 1)
-	{
-		signal(SIGINT, restore_prompt);
-		signal(SIGQUIT, SIG_IGN);
-	}
+	char	**env;
+
+	env = NULL;
+	g_ret_number = 0;
+	setup_term();
+	run_signals(1);
+	env = init_env(enve, env);
+	return (env);
 }
 
-void	restore_prompt(int sig)
+int	contrl_d(t_args *args, char **env)
 {
-	g_ret_number = 130;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	(void)sig;
-}
-
-void	setup_term(void)
-{
-	struct termios	t;
-
-	tcgetattr(0, &t);
-	t.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, TCSANOW, &t);
+	close(args->tout);
+	close(args->tin);
+	fdcloser(args);
+	free_array(env);
+	return (0);
 }

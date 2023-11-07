@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 22:53:32 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/15 01:47:43 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/22 23:24:37 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static char	**create_env(char **env)
 	dst = malloc(sizeof(char *) * (i));
 	if (!dst)
 		return (NULL);
-	dst[i - 1] = '\0';
+	dst[i - 1] = NULL;
 	return (dst);
 }
 

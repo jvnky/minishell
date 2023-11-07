@@ -8,7 +8,7 @@ CFLAGS					= 	 -Wall -Wextra -Werror  -I includes -g
 
 LFLAGS					= 	 -L -lft -lreadline
 
-LEAKS					=	-g3 -fsanitize=address
+LEAKS					=	#-g3 -fsanitize=address
 
 BONUS_FLAG				= 	0
 
@@ -47,6 +47,7 @@ SRCS_LIST					=	\
 							$(MINISHELL) \
 
 MINISHELL                   =	/main/main.c  \
+								/main/main_utils.c \
 								/main/ft_itoa.c  \
 								/main/init.c  \
 								/main/utils.c   \
@@ -57,6 +58,7 @@ MINISHELL                   =	/main/main.c  \
 								/parser/parse_node.c    \
 								/parser/parse_node_utils.c    \
 								/parser/parser_command.c    \
+								/parser/parse_echo_utils.c    \
 								/parser/parser_utils.c \
 								/parser/start_parse.c   \
 								/ast/treeAST.c   \
@@ -75,7 +77,17 @@ MINISHELL                   =	/main/main.c  \
 								/ast/mani_split.c \
 								/ast/absolut_path.c \
 								/ast/exec_ast.c \
-
+								/ast/exec_ast_utils.c \
+								/ast/lovenorm.c \
+								/ast/loveone.c \
+								/ast/lovetwo.c \
+								/ast/lovethree.c \
+								/ast/astnorm.c \
+								/ast/astnormone.c \
+								/ast/execbuilt.c \
+								/exec/cd_utils.c \
+								/ast/exec_builtin_utils.c \
+								/ast/exec_exit.c \
 
 SRCS                        =	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 

@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 01:01:32 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/15 01:48:57 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/24 04:29:13 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,31 @@ int	ft_strcompr(char *s1, char *s2)
 	if (!s1[i] && !s2[i])
 		return (1);
 	return (0);
+}
+
+char	**launch_cd_option(char **env, char *path, int i)
+{
+	if (i == 1)
+	{
+		if (chdir("..") == -1)
+			return (NULL);
+		env = cd_utils(env, path);
+		if (!env)
+			return (NULL);
+	}
+	else if (i == 2)
+	{
+		if (chdir("/") == -1)
+			return (NULL);
+		env = cd_utils(env, path);
+		if (!env)
+			return (NULL);
+	}
+	else if (i == 3)
+	{
+		env = cd_minus(env, path);
+		if (!env)
+			return (NULL);
+	}
+	return (env);
 }

@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 02:42:15 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/14 01:38:09 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/25 02:11:00 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ static char	*put_new_env(char *str)
 
 char	**ft_export(char **env, char *str)
 {
-	int		i;
 	char	**dst;
+	int		i;
 
 	i = -1;
 	while (env[++i])

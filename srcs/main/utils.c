@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychair <ychair@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 11:07:02 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/21 03:27:53 by ychair           ###   ########.fr       */
+/*   Updated: 2023/10/26 00:52:20 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 int	ft_strlen(char *str)
 {
 	int	i;
-	if(!str)
-		return 0;
+
+	if (!str)
+		return (0);
 	i = -1;
 	while (str[++i])
 		;
@@ -56,8 +57,6 @@ void	free_data(t_data *data)
 			j = -1;
 			while (data->parse[i][++j])
 				free(data->parse[i][j]);
-			/*if (data->parse[i][j])
-				free(data->parse[i][j]);*/
 			free(data->parse[i]);
 		}
 		if (data->parse[i])

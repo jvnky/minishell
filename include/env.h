@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 01:48:27 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/14 00:41:57 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/25 23:48:45 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,6 @@ int		recup_patch(char *str, char *buff, char **env);
 int		ft_strcompr(char *s1, char *s2);
 
 void	free_env(char **env);
+char	**cd_utils(char **env, char *path);
+int		check_cd_option(char *str);
 #endif

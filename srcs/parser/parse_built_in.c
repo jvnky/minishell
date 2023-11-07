@@ -6,36 +6,11 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:51:10 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/15 23:06:35 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/24 22:58:16 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	parse_echo(t_args *args)
-{
-	int	i;
-
-	i = args->i + 4;
-	while (args->str[i] && (args->str[i] == ' ' || args->str[i] == '\t'
-			|| args->str[i] == '\n' || args->str[i] == '\r'
-			|| args->str[i] == '\v' || args->str[i] == '\f'))
-		i++;
-	if (args->str[i] == '-' && args->str[i])
-	{
-		i++;
-		while (args->str[i] && args->str[i] == 'n')
-			i++;
-		if (args->str[i] && (args->str[i] == ' ' || args->str[i] == '\t'
-				|| args->str[i] == '\n' || args->str[i] == '\r'
-				|| args->str[i] == '\v'
-				|| args->str[i] == '\f'))
-			return (i);
-		else
-			return (0);
-	}
-	return (0);
-}
 
 static int	check_echo(t_args *args, t_data *data)
 {

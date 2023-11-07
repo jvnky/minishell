@@ -6,7 +6,7 @@
 /*   By: cofoundo <cofoundo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/08 13:51:56 by cofoundo          #+#    #+#             */
-/*   Updated: 2023/10/15 15:26:35 by cofoundo         ###   ########.fr       */
+/*   Updated: 2023/10/24 04:17:22 by cofoundo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*ft_itoa(int n)
 
 	x = n;
 	i = ft_fact(x);
-	if (!ft_zero(x))
+	if (x > 0 || x < 0)
 	{
 		if (x < 0)
 		{
